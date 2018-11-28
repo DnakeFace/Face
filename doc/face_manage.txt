@@ -1,0 +1,30 @@
+1、人脸图片添加：
+   dxml p = new dxml();
+   dmsg req = new dmsg();
+   p.setInt("/params/id", 123456); //用户ID
+   p.setInt("/params/uid", 0); //扩展ID，0-100
+   p.setInt("/params/black", 0); //黑名单 0:正常 1:黑名单
+   p.setText("/params/url", "/sdcard/new.jpg"); // 人脸图片
+   req.to("/face/ex/jpeg", p.toString());
+   注意：人脸文件后台添加完会自动删除，文件不能重复覆盖；一张图片只能有一个人脸，多人脸情况只会抓取第一个检测到的人脸。
+
+2、人脸特征值添加：
+   dxml p = new dxml();
+   dmsg req = new dmsg();
+   p.setInt("/params/id", 123456); //用户ID
+   p.setInt("/params/uid", 0); //扩展ID，0-100
+   p.setInt("/params/black", 0); //黑名单 0:正常 1:黑名单
+   p.setText("/params/url", "/sdcard/new.fea"); // 人脸特征值文件
+   req.to("/face/ex/add", p.toString());
+   注意：特征值文件后台添加完会自动删除，文件不能重复覆盖。
+
+3、人脸删除：
+   dxml p = new dxml();
+   dmsg req = new dmsg();
+   p.setInt("/params/id", 123456);
+   p.setInt("/params/uid", 0);
+   req.to("/face/ex/del", p.toString());
+
+4、人脸图片、特征值添加两个API功能和效果一样，图片添加需要终端设备计算生成特征值。
+
+5、人脸添加删除对应的id和uid必须一致才能正常删除。

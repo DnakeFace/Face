@@ -1,0 +1,21 @@
+人脸事件集中在com.dnake.v700.devent文件中：
+1、/ui/ir/detect
+   人体感应，设备IR检测到人体触发此事件。
+
+2、/ui/sdt/detect
+   身份证读取通知。
+
+3、/ui/sdt/result
+   人证比对结果通知。
+
+4、/ui/face/detect
+   人脸检测通知，后台检测到画面有人脸时会触发此事件。
+
+5、/ui/face/result
+   本地WEB管理人脸识别结果。
+
+6、/ui/cms/result
+   使用700管理软件或face_manage.txt扩展接口添加的人脸识别结果触发此接口。
+
+7、/ui/face/capture
+   人脸抓拍接口，非识别人脸触发此接口事件。

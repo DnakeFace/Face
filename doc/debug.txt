@@ -1,0 +1,14 @@
+﻿1、USB调试口接到电脑，可以发现安卓调试设备。
+
+2、执行：
+   adb root
+   adb shell
+   进入命令行后执行：
+   mount -o remount,rw /system
+   rm -f /system/app/talk.apk
+   sync
+   svc reboot
+
+3、安装执行狄耐克应用程序。
+
+4、由于不同开发环境签名不一致，必须先删除对应系统应用避免产生冲突。
