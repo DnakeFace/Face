@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/main_bkg"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
+
+        <com.dnake.widget.Button2
+            android:id="@+id/main_btn_logger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:background="@drawable/main_btn_logger"
+            android:gravity="bottom|center"
+            android:text="@string/main_btn_logger"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <com.dnake.widget.Button2
+            android:id="@+id/main_btn_err"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="120dp"
+            android:layout_toRightOf="@+id/main_btn_logger"
+            android:background="@drawable/main_btn_logger"
+            android:gravity="bottom|center"
+            android:text="@string/main_btn_err"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <com.dnake.widget.Button2
+            android:id="@+id/main_btn_setup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="120dp"
+            android:layout_toRightOf="@+id/main_btn_err"
+            android:background="@drawable/main_btn_setup"
+            android:gravity="bottom|center"
+            android:text="@string/main_btn_setup"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,222 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" >
+
+    <LinearLayout
+        android:id="@+id/osd_face_data"
+        android:layout_width="112dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#20000000"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/osd_face_f0"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_t0"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_f1"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_t1"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_f2"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_t2"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_f3"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_t3"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/osd_face_capture"
+        android:layout_width="112dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#20000000"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/osd_face_cf0"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_ct0"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_cf1"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_ct1"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_cf2"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_ct2"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/osd_face_cf3"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.9"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/osd_face_ct3"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:alpha="0.9"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/osd_face_result"
+        android:layout_width="420dp"
+        android:layout_height="172dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="68dp"
+        android:background="@drawable/sdt_osd_result_top" >
+
+        <RelativeLayout
+            android:id="@+id/osd_face_result2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" >
+
+            <ImageView
+                android:id="@+id/osd_face_result_p"
+                android:layout_width="164dp"
+                android:layout_height="164dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="12dp"
+                android:scaleType="fitCenter" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/osd_face_result_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@+id/osd_face_result2"
+            android:text="姓    名："
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/osd_face_result_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/osd_face_result_name"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/osd_face_result2"
+            android:text="相似度："
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/osd_face_result_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/osd_face_result_sim"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/osd_face_result2"
+            android:text="状    态："
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </RelativeLayout>
+</RelativeLayout>

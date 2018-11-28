@@ -1,0 +1,202 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/sub_bkg"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="80dp"
+        android:background="@drawable/sdt_bkg_1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="34dp"
+            android:text="姓 名"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="106dp"
+            android:layout_marginTop="30dp"
+            android:text="张三"
+            android:textColor="#0000A0"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="74dp"
+            android:text="性 别"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="106dp"
+            android:layout_marginTop="70dp"
+            android:text="男"
+            android:textColor="#0000A0"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="182dp"
+            android:layout_marginTop="74dp"
+            android:text="民 族"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_nation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="242dp"
+            android:layout_marginTop="70dp"
+            android:text="汉"
+            android:textColor="#0000A0"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="114dp"
+            android:text="出 生"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="106dp"
+            android:layout_marginTop="112dp"
+            android:text="2017 年 1 月 2 日"
+            android:textColor="#0000A0"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="154dp"
+            android:text="住 址"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_address"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="106dp"
+            android:layout_marginTop="152dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="福建省厦门市湖里区创新路2号5楼"
+            android:textColor="#0000A0"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="280dp"
+            android:text="公民身份号码"
+            android:textColor="#0000A0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sdt_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="186dp"
+            android:layout_marginTop="280dp"
+            android:text="350583XXXXXXXXXXXX"
+            android:textColor="#0000A0"
+            android:textSize="22sp" />
+
+        <ImageView
+            android:id="@+id/sdt_photo"
+            android:layout_width="130dp"
+            android:layout_height="160dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="346dp"
+            android:layout_marginTop="60dp"
+            android:background="#000000" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/sdt_photo2"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="80dp"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="详细信息"
+        android:textSize="38sp"
+        android:layout_marginTop="28dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/sdt_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时间"
+        android:textSize="32sp"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

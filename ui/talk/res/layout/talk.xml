@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/talk_bkg"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/talk_bkg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/main_text_bkg" >
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/prompt_text"
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="#886935"
+        android:textSize="80sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

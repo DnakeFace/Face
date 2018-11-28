@@ -1,0 +1,206 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" >
+
+    <ImageView
+        android:id="@+id/osd_sid_logo"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/police" />
+
+    <RelativeLayout
+        android:id="@+id/osd_sid_tips"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/sdt_osd_tips" >
+
+        <TextView
+            android:id="@+id/osd_sid_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="32sp" />
+
+        <com.dnake.widget.Button2
+            android:id="@+id/osd_sid_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/back" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/osd_sid_result"
+        android:layout_width="374dp"
+        android:layout_height="418dp"
+        android:layout_centerInParent="true"
+        android:alpha="0.95"
+        android:background="#FFFFFF"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:background="#8080C0" >
+
+            <TextView
+                android:id="@+id/osd_sid_result_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="#FFFFFF"
+                android:textSize="20.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/osd_sid_layout1"
+            android:layout_width="346dp"
+            android:layout_height="213dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="59dp"
+            android:background="@drawable/sdt_osd_result_top" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp" >
+
+                    <ImageView
+                        android:layout_width="154dp"
+                        android:layout_height="154dp"
+                        android:src="@drawable/sdt_osd_photo_blue" />
+
+                    <ImageView
+                        android:id="@+id/osd_sid_result_p1"
+                        android:layout_width="134dp"
+                        android:layout_height="134dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/osd_sid_result_p1"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="16dp"
+                        android:text="证件照"
+                        android:textColor="#303030"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="13dp" >
+
+                    <ImageView
+                        android:layout_width="154dp"
+                        android:layout_height="154dp"
+                        android:src="@drawable/sdt_osd_photo_blue" />
+
+                    <ImageView
+                        android:id="@+id/osd_sid_result_p2"
+                        android:layout_width="134dp"
+                        android:layout_height="134dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/osd_sid_result_p2"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="16dp"
+                        android:text="抓拍照"
+                        android:textColor="#303030"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/osd_sid_layout1"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="14dp"
+            android:background="@drawable/sdt_osd_result_bottom" >
+
+            <ImageView
+                android:layout_width="334dp"
+                android:layout_height="106dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/sdt_osd_result_blue" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="26dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="姓    名："
+                        android:textColor="#303030"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:id="@+id/osd_sid_result_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#303030"
+                        android:textSize="19sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="6dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="身份证："
+                        android:textColor="#303030"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:id="@+id/osd_sid_result_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#303030"
+                        android:textSize="19sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
