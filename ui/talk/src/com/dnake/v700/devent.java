@@ -17,6 +17,7 @@ import com.dnake.misc.SysProtocol;
 import com.dnake.misc.Sound;
 import com.dnake.misc.SysTalk;
 import com.dnake.misc.sCaller;
+import com.dnake.panel.BaseLabel;
 import com.dnake.panel.FaceLabel;
 import com.dnake.panel.TalkLabel;
 import com.dnake.panel.WakeTask;
@@ -60,6 +61,8 @@ public class devent {
 		de = new devent("/ui/run") {
 			@Override
 			public void process(String body) {
+				if (BaseLabel.mTimerWDT != 0 && Math.abs(System.currentTimeMillis()-BaseLabel.mTimerWDT) > 1*1000)
+					return; //界面无响应
 				dmsg.ack(200, null);
 			}
 		};
@@ -398,6 +401,49 @@ public class devent {
 					//非法卡上报，上海地标
 					SysAccess.logger(0, 0, 0, 0, card, 0);
 					Sound.play(Sound.card_err, false);
+				}
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/center/card") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				SysCard.Data d = new SysCard.Data();
+				d.card = p.getText("/params/card");
+				d.build = p.getInt("/params/build", 0);
+				d.unit = p.getInt("/params/unit", 0);
+				d.floor = p.getInt("/params/floor", 0);
+				d.family = p.getInt("/params/family", 0);
+				if (p.getInt("/params/add", 1) == 1)
+					SysCard.add(d);
+				else
+					SysCard.rm(d.card);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/center/card2") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				int total = p.getInt("/params/total", 0);
+				for(int i=0; i<total; i++) {
+					SysCard.Data d = new SysCard.Data();
+					d.card = p.getText("/params/c"+i+"/d");
+					if (p.getInt("/params/c"+i+"/a", 1) == 1) {
+						d.build = p.getInt("/params/c"+i+"/b", 0);
+						d.unit = p.getInt("/params/c"+i+"/u", 0);
+						d.floor = p.getInt("/params/c"+i+"/f", 0);
+						d.family = p.getInt("/params/c"+i+"/r", 0);
+						SysCard.add(d);
+					} else
+						SysCard.rm(d.card);
 				}
 			}
 		};

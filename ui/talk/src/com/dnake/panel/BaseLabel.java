@@ -16,6 +16,7 @@ import android.view.WindowManager;
 @SuppressLint("HandlerLeak")
 public class BaseLabel extends Activity {
 	public static long mKeyTs = System.currentTimeMillis();
+	public static long mTimerWDT = 0;
 
 	private Handler e_timer = null;
 	protected Boolean bFinish = true;
@@ -83,6 +84,7 @@ public class BaseLabel extends Activity {
 					if (isFinishing())
 						return;
 
+					mTimerWDT = System.currentTimeMillis();
 					onTimer();
 
 					if (SysTalk.Keys.size() > 0) {
@@ -148,5 +150,6 @@ public class BaseLabel extends Activity {
 			bThread.interrupt();
 			bThread = null;
 		}
+		mTimerWDT = 0;
 	}
 }
