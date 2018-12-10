@@ -94,16 +94,6 @@ public final class SysAccess {
 	}
 
 	public static void process() {
-		for(int i=0; i<2; i++) {
-			if (lock_ts[i] != 0 && Math.abs(System.currentTimeMillis() - lock_ts[i]) >= lock.timeout * 1000)
-				setLock(i, 0);
-			if (delay_ts[i] != 0 && Math.abs(System.currentTimeMillis() - delay_ts[i]) >= lock.delay * 1000)
-				setLock(i, 1);
-		}
-
-		if (admin.ts != 0 && Math.abs(System.currentTimeMillis() - admin.ts) >= 10 * 1000)
-			admin.ts = 0;
-
 		if (lock.sensor.ts != 0) {
 			if (lock.sensor.st == 0) { // 关门
 				if (lock.sensor.have)
@@ -120,57 +110,27 @@ public final class SysAccess {
 		}
 	}
 
-	private static long delay_ts[] = {0, 0};
-	private static long lock_ts[] = {0, 0};
 	private static MediaPlayer player = null;
 
-	public static void unlock(int index, int jpeg) {
+	public static void unlock(int index) {
 		if (sys.talk.limit != 0) //特殊密码锁定，限制呼叫
 			return;
 
 		WakeTask.acquire();
 
-		if (lock.delay == 0)
-			setLock(index, 1);
-		else
-			delay_ts[index] = System.currentTimeMillis();
-
-		if (sCaller.running == sCaller.TALK) {
-			dmsg req = new dmsg();
-			dxml p = new dxml();
-			p.setInt("/params/mode", 1);
-			p.setText("/params/url", Sound.unlock);
-			req.to("/talk/prompt", p.toString());
-		} else {
-			if (player == null) {
-				OnCompletionListener listener = new OnCompletionListener() {
-					public void onCompletion(MediaPlayer p) {
-						player.reset();
-						player.release();
-						player = null;
-					}
-				};
-				player = Sound.play(Sound.unlock, false, listener);
-			}
-		}
-		if (jpeg != 0)
-			sCaller.jpeg();
-	}
-
-	public static void setLock(int index, int onoff) {
-		System.out.println("setLock"+index+": " + onoff);
-
-		if (onoff == 0)
-			lock_ts[index] = 0;
-		else
-			lock_ts[index] = System.currentTimeMillis();
-		delay_ts[index] = 0;
-
-		dxml p = new dxml();
 		dmsg req = new dmsg();
-		p.setInt("/params/index", index);
-		p.setInt("/params/onoff", onoff);
-		req.to("/control/v170/lock", p.toString());
+		req.to("/face/unlock", null);
+
+		if (player == null) {
+			OnCompletionListener listener = new OnCompletionListener() {
+				public void onCompletion(MediaPlayer p) {
+					player.reset();
+					player.release();
+					player = null;
+				}
+			};
+			player = Sound.play(Sound.unlock, false, listener);
+		}
 	}
 
 	public static void elev(int f, int r) {

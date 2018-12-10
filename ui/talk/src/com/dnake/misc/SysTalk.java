@@ -177,6 +177,7 @@ public class SysTalk extends Service {
 			utils.buzzer(100);
 
 			while (true) {
+				SysCard.process();
 				utils.process();
 				try {
 					Thread.sleep(40);

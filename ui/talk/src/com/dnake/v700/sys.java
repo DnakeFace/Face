@@ -16,9 +16,9 @@ public final class sys {
 
 	public static int version_major = 1; // 主版本
 	public static int version_minor = 2; // 次版本
-	public static int version_minor2 = 0; // 次版本2
+	public static int version_minor2 = 1; // 次版本2
 
-	public static String version_date = "20180912"; // 日期
+	public static String version_date = "20181206"; // 日期
 
 	public static String version_ex = "(std)"; // 扩展标注
 
@@ -336,10 +336,14 @@ public final class sys {
 	}
 
 	// 0:横屏 1:竖屏
+	private static int mLcd = -1;
 	public static int lcd() {
-		dxml p = new dxml();
-		p.load("/system/etc/special.xml");
-		return p.getInt("/sys/lcd", 0);
+		if (mLcd == -1) {
+			dxml p = new dxml();
+			p.load("/system/etc/special.xml");
+			mLcd = p.getInt("/sys/lcd", 0);
+		}
+		return mLcd;
 	}
 
 	public static int lan_carrier() {
@@ -435,5 +439,15 @@ public final class sys {
 		} catch (IOException e) {
 		}
 		return sdt;
+	}
+
+	private static int mH3C = -1;
+	public static int h3c() {
+		if (mH3C == -1) {
+			dxml p = new dxml();
+			p.load("/dnake/bin/special.xml");
+			mH3C = p.getInt("/sys/h3c", 0);
+		}
+		return mH3C;
 	}
 }

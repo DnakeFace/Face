@@ -46,6 +46,8 @@ public class FaceLabel extends BaseLabel {
 	public void onTimer() {
 		super.onTimer();
 
+		if (sys.h3c() != 0) //H3C模式不退出识别界面
+			mTs = System.currentTimeMillis();
 		if (Math.abs(System.currentTimeMillis() - mTs) < 2 * 60 * 1000) {
 			WakeTask.acquire();
 		} else {

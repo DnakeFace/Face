@@ -133,9 +133,9 @@ public final class SysProtocol {
 				json.put("identifyTime", ts);
 				if (d.mBmp != null) {
 					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					d.mBmp.compress(Bitmap.CompressFormat.JPEG, 90, os);
-					String b64 = "data:image/jpeg;base64,"+Base64.encodeToString(os.toByteArray(), Base64.DEFAULT);
-					json.put("idcardImg", b64);
+	                d.mBmp.compress(Bitmap.CompressFormat.JPEG, 90, os);
+	                String b64 = "data:image/jpeg;base64,"+Base64.encodeToString(os.toByteArray(), Base64.DEFAULT);
+	                json.put("idcardImg", b64);
 				}
 				if (bmp != null) {
 					ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -310,9 +310,9 @@ public final class SysProtocol {
 					FaceData d = mData.poll();
 					if (mProtocol == 1) {
 						doQXDProtocol(d);
-					} else if (mProtocol == 2) { // 乐视协议
+					} else if (mProtocol == 2) {
 						doLeProtocol(d);
-					} else if (mProtocol == 3) { //上海东方网力
+					} else if (mProtocol == 3) {
 						doNetposaProtocol(d);
 					}
 				}
