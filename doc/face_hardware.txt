@@ -15,3 +15,10 @@
    RAM£∫2GB
    FLASH£∫8GB
    LCD£∫7¥ÁRGB 1024x600
+
+2°¢906N-T3(»À¡≥Õ¯πÿ)
+   CPU£∫RK3399 PRO 6∫À1.8GHz
+   RAM£∫2GB
+   FLASH£∫16GB
+   NPU£∫2.4TOPs
+   œ‘ æ£∫HDMI
