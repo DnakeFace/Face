@@ -15,6 +15,7 @@ import com.dnake.misc.SysAccess;
 import com.dnake.misc.SysCard;
 import com.dnake.misc.SysProtocol;
 import com.dnake.misc.Sound;
+import com.dnake.misc.SysSpecial;
 import com.dnake.misc.SysTalk;
 import com.dnake.misc.sCaller;
 import com.dnake.panel.BaseLabel;
@@ -314,6 +315,7 @@ public class devent {
 				dmsg.ack(200, null);
 				dmsg req = new dmsg();
 				req.to("/face/unlock", body);
+				Sound.play(Sound.unlock, false);
 			}
 		};
 		elist.add(de);
@@ -560,6 +562,7 @@ public class devent {
 
 				FaceNormal.mFaceTs = new Date();
 				FaceNormal.mFaceCms = false;
+				FaceNormal.mFaceWx = false;
 				FaceNormal.mFaceHave = true;
 			}
 		};
@@ -587,6 +590,36 @@ public class devent {
 
 				FaceNormal.mFaceTs = new Date();
 				FaceNormal.mFaceCms = true;
+				FaceNormal.mFaceWx = false;
+				FaceNormal.mFaceHave = true;
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/wx/result") { //微云门禁识别结果
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				FaceNormal.mFaceUid = p.getInt("/params/id", 0);
+				FaceNormal.mFaceSim = p.getInt("/params/data", 0);
+				FaceNormal.mFaceUrl = p.getText("/params/url");
+				FaceNormal.mFaceName = p.getText("/params/name");
+
+				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
+				String jpeg = p.getText("/params/global/url");
+				FaceNormal.mFaceGlobal.jpeg = utils.readFile(jpeg);
+				FaceNormal.mFaceGlobal.width = p.getInt("/params/global/w", 0);
+				FaceNormal.mFaceGlobal.height = p.getInt("/params/global/h", 0);
+				FaceNormal.mFaceGlobal.f_x = p.getInt("/params/face/x", 0);
+				FaceNormal.mFaceGlobal.f_y = p.getInt("/params/face/y", 0);
+				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
+				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
+
+				FaceNormal.mFaceTs = new Date();
+				FaceNormal.mFaceCms = false;
+				FaceNormal.mFaceWx = true;
 				FaceNormal.mFaceHave = true;
 			}
 		};
@@ -625,12 +658,53 @@ public class devent {
 		};
 		elist.add(de);
 
+		de = new devent("/ui/v170/qr") { //二维码
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				String data = p.getText("/params/data");
+				if (data != null) {
+					if (data.startsWith("acp://"))
+						SysSpecial.doACP(data);
+					else if (data.startsWith("haina:"))
+						SysSpecial.doHaina(data);
+					else
+						Sound.play(Sound.card_err, false);
+				} else
+					Sound.play(Sound.card_err, false);
+			}
+		};
+		elist.add(de);
+
 		//快速人脸注册提示，演示用
 		de = new devent("/ui/face/fast/register") {
 			@Override
 			public void process(String body) {
 				dmsg.ack(200, null);
 				Sound.play(Sound.modify_success, false);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/web/sys/read") {
+			@Override
+			public void process(String body) {
+				dxml p = new dxml();
+				p.setInt("/params/language", sys.language());
+				dmsg.ack(200, p.toString());
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/web/sys/write") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+				dxml p = new dxml(body);
+				int val = p.getInt("/params/language", sys.language());
+				sys.language(val);
 			}
 		};
 		elist.add(de);

@@ -4,4 +4,12 @@
     android:layout_height="fill_parent"
     android:background="#000000"
     android:orientation="horizontal" >
-</RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/face_camera_err" />
+
+</RelativeLayout>

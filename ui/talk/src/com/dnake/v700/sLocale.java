@@ -23,14 +23,19 @@ public class sLocale {
 		p.save(url);
 	}
 
-	private static Boolean boot = true;
+	private static Boolean mBoot = true;
+	private static long mTs = 0;
 
 	public static void process() {
+		if (sys.ts(mTs) < 5*1000)
+			return;
+		mTs = System.currentTimeMillis();
+
 		Boolean ok = false;
 		if (!Locale.getDefault().getLanguage().equals(language) || !Locale.getDefault().getCountry().equals(country))
 			ok = true;
-		if (boot) {
-			boot = false;
+		if (mBoot) {
+			mBoot = false;
 			if (ok) {
 				dxml p = new dxml();
 				dmsg req = new dmsg();

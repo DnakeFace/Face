@@ -2,21 +2,19 @@ package com.dnake.v700;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.dnake.misc.SysTalk;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Configuration;
 
 @SuppressLint("DefaultLocale")
 public final class sys {
 
 	public static int version_major = 1; // 主版本
-	public static int version_minor = 2; // 次版本
-	public static int version_minor2 = 1; // 次版本2
+	public static int version_minor = 3; // 次版本
+	public static int version_minor2 = 0; // 次版本2
 
 	public static String version_date = "20181206"; // 日期
 
@@ -197,8 +195,6 @@ public final class sys {
 			payload.H264 = p.getInt("/sys/payload/h264", 102);
 		} else
 			save();
-
-		sys.httpLanguage(sys.language());
 	}
 
 	public static void save() {
@@ -283,22 +279,6 @@ public final class sys {
 		panel.ringing = 35;
 	}
 
-	public static void httpLanguage(int lang) {
-		try {
-			FileOutputStream out = new FileOutputStream("/var/etc/language");
-			String s = "CHS\n";
-			if (lang != 0)
-				s = "EN";
-			out.write(s.getBytes());
-			out.flush();
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static long ts(long val) {
 		return Math.abs(System.currentTimeMillis() - val);
 	}
@@ -365,7 +345,7 @@ public final class sys {
 		return ok;
 	}
 
-	// 0:简体中文 1:英文 2:繁体中文 3:西班牙语
+	// 0:简体中文 1:英文 2:繁体中文
 	public static int language() {
 		if (SysTalk.mContext == null)
 			return 0;
@@ -379,8 +359,6 @@ public final class sys {
 				return 0;
 		} else if (s.equalsIgnoreCase("en"))
 			return 1;
-		else if (s.equalsIgnoreCase("es"))
-			return 3;
 		return 0;
 	}
 
@@ -402,18 +380,13 @@ public final class sys {
 			s = "zh";
 			s2 = "TW";
 			break;
-		case 3:
-			s = "es";
-			s2 = "US";
 		}
 
-		Intent it = new Intent("com.dnake.broadcast");
-		it.putExtra("event", "com.dnake.eSettings.locale");
-		it.putExtra("language", s);
-		it.putExtra("country", s2);
-		SysTalk.mContext.sendBroadcast(it);
-
-		sys.httpLanguage(val);
+		dmsg req = new dmsg();
+		dxml p = new dxml();
+		p.setText("/params/language", s);
+		p.setText("/params/country", s2);
+		req.to("/settings/locale", p.toString());
 	}
 
 	public static int sdt() {

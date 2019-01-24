@@ -35,8 +35,10 @@ public class FaceNormal {
 	public static int mFaceUid = -1;
 	public static int mFaceSim;
 	public static int mFaceBlack = 0;
-	public static boolean mFaceCms = false;
+	public static String mFaceName;
 	public static String mFaceUrl;
+	public static boolean mFaceCms = false;
+	public static boolean mFaceWx = false;
 	public static Date mFaceTs;
 	public static SysProtocol.FaceGlobal mFaceGlobal;
 
@@ -58,7 +60,19 @@ public class FaceNormal {
 		onCaptureDisplay();
 	}
 
+	private static String mOsdName = "";
+	private static String mOsdSimilarity = "";
+	private static String mOsdWhite = "";
+	private static String mOsdBlack = "";
+	private static String mOsdCapture = "";
+
 	public static void onOsdStart(RelativeLayout layout) {
+		mOsdName = SysTalk.mContext.getString(R.string.face_normal_name);
+		mOsdSimilarity = SysTalk.mContext.getString(R.string.face_normal_similarity);
+		mOsdWhite = SysTalk.mContext.getString(R.string.face_normal_white);
+		mOsdBlack = SysTalk.mContext.getString(R.string.face_normal_black);
+		mOsdCapture = SysTalk.mContext.getString(R.string.face_normal_capture);
+
 		mLeftData = (LinearLayout) layout.findViewById(R.id.osd_face_data);
 		mRightData = (LinearLayout) layout.findViewById(R.id.osd_face_capture);
 
@@ -90,6 +104,8 @@ public class FaceNormal {
 
 			if (mFaceCms) {
 				name = String.valueOf(mFaceUid);
+			} else if (mFaceWx) {
+				name = mFaceName;
 			} else {
 				dxml p = new dxml();
 				if (mFaceBlack != 0) {
@@ -115,15 +131,15 @@ public class FaceNormal {
 			}
 			mFaceData[mFaceData.length - 1] = d;
 
-			mResultName.setText("姓    名：" + name);
-			mResultSim.setText("相似度：" + mFaceSim);
+			mResultName.setText(mOsdName + name);
+			mResultSim.setText(mOsdSimilarity + mFaceSim);
 			if (black) {
-				mResultStatus.setText("状    态：黑名单");
+				mResultStatus.setText(mOsdBlack);
 				mResultName.setTextColor(0xFFFF0000);
 				mResultSim.setTextColor(0xFFFF0000);
 				mResultStatus.setTextColor(0xFFFF0000);
 			} else {
-				mResultStatus.setText("状    态：正常");
+				mResultStatus.setText(mOsdWhite);
 				mResultName.setTextColor(0xFF000000);
 				mResultSim.setTextColor(0xFF000000);
 				mResultStatus.setTextColor(0xFF000000);
@@ -197,7 +213,7 @@ public class FaceNormal {
 		}
 		int n = mCaptureData.length - 1;
 		mCaptureData[n] = d;
-		mCaptureData[n].name = String.format("抓拍%d", mCaptureCount);
+		mCaptureData[n].name = String.format(mOsdCapture, mCaptureCount);
 		mCaptureHave = true;
 	}
 

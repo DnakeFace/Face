@@ -179,6 +179,7 @@ public class SysTalk extends Service {
 			while (true) {
 				SysCard.process();
 				utils.process();
+				sLocale.process();
 				try {
 					Thread.sleep(40);
 				} catch (InterruptedException e) {
