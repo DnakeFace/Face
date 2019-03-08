@@ -7,6 +7,7 @@ import com.dnake.misc.FaceNormal;
 import com.dnake.v700.dmsg;
 import com.dnake.v700.dxml;
 import com.dnake.v700.sys;
+import com.dnake.widget.ZXing;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +30,7 @@ public class FaceLabel extends BaseLabel {
 	public static Boolean mStartVo = true;
 
 	private long mOsdTs = 0;
-	private int mOsdHeight = 0;
+	private int mOsdWidth = 0, mOsdHeight = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class FaceLabel extends BaseLabel {
 	public void onTimer() {
 		super.onTimer();
 
-		if (sys.h3c() != 0) //H3C模式不退出识别界面
+		if (sys.h3c() != 0) // H3C模式不退出识别界面
 			mTs = System.currentTimeMillis();
 		if (Math.abs(System.currentTimeMillis() - mTs) < 2 * 60 * 1000) {
 			WakeTask.acquire();
@@ -67,7 +69,8 @@ public class FaceLabel extends BaseLabel {
 			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		}
 
-		if (mOsdHeight != mOsdLayout.getHeight()) {
+		if (mOsdWidth != mOsdLayout.getWidth() || mOsdHeight != mOsdLayout.getHeight()) {
+			mOsdWidth = mOsdLayout.getWidth();
 			mOsdHeight = mOsdLayout.getHeight();
 			mStartVo = true;
 		}
@@ -91,6 +94,7 @@ public class FaceLabel extends BaseLabel {
 		FaceNormal.onTimer();
 	}
 
+	public static String mWxUuid = "";
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -102,6 +106,20 @@ public class FaceLabel extends BaseLabel {
 
 		FaceNormal.onStart();
 		FaceCompare.onStart();
+
+		if (sys.lcd() != 0) {
+			dxml p = new dxml();
+			p.load("/dnake/cfg/wx_access.xml");
+			ImageView qr = (ImageView) mOsdLayout.findViewById(R.id.osd_wx_qr2d);
+			if (p.getInt("/sys/enable", 0) != 0 && qr != null) { // 微云门禁二维码
+				String server = p.getText("/sys/server");
+				String uuid = p.getText("/sys/uuid");
+				String s = "http://" + server + "/weixin/api/wx_scan.php?api=wx_unlock.php&data=" + uuid;
+				qr.setImageBitmap(ZXing.QR2D(s, 100));
+				qr.setVisibility(View.VISIBLE);
+				mWxUuid = uuid;
+			}
+		}
 	}
 
 	@Override

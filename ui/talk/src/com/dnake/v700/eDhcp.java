@@ -177,7 +177,6 @@ public class eDhcp {
 						System.err.println("eDhcp config change......................");
 					}
 				}
-				sLocale.process();
 
 				try {
 					Thread.sleep(1000);
