@@ -1,46 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Face</string>
-
-    <string name="login_title">System</string>
-    <string name="login_passwd_prompt">Password:</string>
-    <string name="login_passwd_ok">OK</string>
-    <string name="login_passwd_cancel">Cancel</string>
-
-    <string name="main_btn_logger">"正常记录"</string>
-    <string name="main_btn_err">"失败记录"</string>
-    <string name="main_btn_setup">"系统设置"</string>
-    <string name="setup_btn_ok">确定</string>
-    <string name="setup_btn_network">网络设置</string>
-    <string name="setup_btn_passwd">工程密码</string>
-    <string name="setup_network_dhcp">DHCP:</string>
-    <string name="setup_network_ip">IP地址:</string>
-    <string name="setup_network_mask">子网掩码:</string>
-    <string name="setup_network_gateway">默认网关:</string>
+    <string name="app_name">"Face"</string>
+    <string name="login_title">"System"</string>
+    <string name="login_passwd_prompt">"Password:"</string>
+    <string name="login_passwd_ok">"OK"</string>
+    <string name="login_passwd_cancel">"Cancel"</string>
+    <string name="main_btn_logger">"Normal"</string>
+    <string name="main_btn_err">"Failed"</string>
+    <string name="main_btn_setup">"Setup"</string>
+    <string name="setup_btn_ok">"O K"</string>
+    <string name="setup_btn_network">"Network"</string>
+    <string name="setup_btn_passwd">"Password"</string>
+    <string name="setup_network_dhcp">"DHCP:"</string>
+    <string name="setup_network_ip">"IP:"</string>
+    <string name="setup_network_mask">"Mask:"</string>
+    <string name="setup_network_gateway">"Gateway:"</string>
     <string name="setup_network_dns">DNS:</string>
-    <string name="setup_passwd_old">旧密码：</string>
-    <string name="setup_passwd_new">新密码：</string>
-    <string name="setup_passwd_confirm">重新输入：</string>
-    <string name="setup_network_real">IP:</string>
-    <string name="setup_network_mac">MAC:</string>
-    <string name="main_prompt_key">"Press Key"</string>
-    <string name="main_prompt_panel_t1">"Call:  RoomNo+#"</string>
-    <string name="main_prompt_panel_t1_wall">"Call: Building+#+Unit+#+RoomNo+#"</string>
-    <string name="main_prompt_panel_t2">"Center:  0000+#"</string>
-    <string name="main_prompt_panel_t3">"Unlock:  #+PSW+#"</string>
-    <string name="main_prompt_panel_t4">"Cancel:  Press *"</string>
-    <string name="main_prompt_passwd">"Unlock:"</string>
-    <string name="main_prompt_admin">"Admin:"</string>
-    <string name="main_text_build">"Building:"</string>
-    <string name="main_text_unit">"Unit:"</string>
-    <string name="main_text_room">"RoomNo:"</string>
-    <string name="ip_conflict">IP conflict</string>
-    <string name="sCaller_call">Calling</string>
-    <string name="sCaller_call_err">Call failed.</string>
-    <string name="sCaller_talk">Talking</string>
-    <string name="sCaller_monitor">In Monitor</string>
-    <string name="sCaller_no_answer">No Answer</string>
-    <string name="sCaller_finish">Finished</string>
+    <string name="setup_passwd_old">"Old:"</string>
+    <string name="setup_passwd_new">"New:"</string>
+    <string name="setup_passwd_confirm">"Confirm:"</string>
+    <string name="setup_network_real">"IP:"</string>
+    <string name="setup_network_mac">"MAC:"</string>
+    <string name="ip_conflict">"IP conflict"</string>
+    <string name="sCaller_call">"Calling"</string>
+    <string name="sCaller_call_err">"Call failed."</string>
+    <string name="sCaller_talk">"Talking"</string>
+    <string name="sCaller_monitor">"In Monitor"</string>
+    <string name="sCaller_no_answer">"No Answer"</string>
+    <string name="sCaller_finish">"Finished"</string>
 
+    <string name="face_normal_name">"Name:  "</string>
+    <string name="face_normal_similarity">"Similarity:  "</string>
+    <string name="face_normal_white">"Status:   Normal"</string>
+    <string name="face_normal_black">"Status:   Black"</string>
+    <string name="face_normal_capture">"C%d"</string>
 </resources>

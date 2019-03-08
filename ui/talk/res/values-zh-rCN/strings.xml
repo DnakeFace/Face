@@ -1,49 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">"人脸识别"</string>
 
+    <string name="app_name">"人脸识别"</string>
+    <string name="login_title">"工程密码"</string>
+    <string name="login_passwd_prompt">"密码："</string>
+    <string name="login_passwd_ok">"确定"</string>
+    <string name="login_passwd_cancel">"取消"</string>
     <string name="main_btn_logger">"正常记录"</string>
     <string name="main_btn_err">"失败记录"</string>
     <string name="main_btn_setup">"系统设置"</string>
+    <string name="setup_btn_ok">"确定"</string>
+    <string name="setup_btn_network">"网络设置"</string>
+    <string name="setup_btn_passwd">"工程密码"</string>
+    <string name="setup_network_dhcp">"DHCP:"</string>
+    <string name="setup_network_ip">"IP地址:"</string>
+    <string name="setup_network_mask">"子网掩码:"</string>
+    <string name="setup_network_gateway">"默认网关:"</string>
+    <string name="setup_network_dns">"DNS:"</string>
+    <string name="setup_passwd_old">"旧密码："</string>
+    <string name="setup_passwd_new">"新密码："</string>
+    <string name="setup_passwd_confirm">"重新输入："</string>
+    <string name="ip_conflict">"IP冲突"</string>
+    <string name="sCaller_call">"正在呼叫"</string>
+    <string name="sCaller_call_err">"呼叫失败"</string>
+    <string name="sCaller_talk">"正在通话"</string>
+    <string name="sCaller_monitor">"正在监视"</string>
+    <string name="sCaller_no_answer">"无人接听"</string>
+    <string name="sCaller_finish">"通话结束"</string>
 
-    <string name="login_title">工程密码</string>
-    <string name="login_passwd_prompt">密码：</string>
-    <string name="login_passwd_ok">确定</string>
-    <string name="login_passwd_cancel">取消</string>
-
-    <string name="setup_btn_ok">确定</string>
-    <string name="setup_btn_network">网络设置</string>
-    <string name="setup_btn_passwd">工程密码</string>
-    <string name="setup_network_dhcp">DHCP:</string>
-    <string name="setup_network_ip">IP地址:</string>
-    <string name="setup_network_mask">子网掩码:</string>
-    <string name="setup_network_gateway">默认网关:</string>
-    <string name="setup_network_dns">DNS:</string>
-    <string name="setup_passwd_old">旧密码：</string>
-    <string name="setup_passwd_new">新密码：</string>
-    <string name="setup_passwd_confirm">重新输入：</string>
-
-    <string name="main_prompt_key">"请按键"</string>
-    <string name="main_prompt_panel_t1">"呼叫住户:  房号+#"</string>
-    <string name="main_prompt_panel_t1_wall">"呼叫住户:  栋号#+单元#+房号#"</string>
-    <string name="main_prompt_panel_t2">"呼叫中心:  0000+#"</string>
-    <string name="main_prompt_panel_t3">"密码开锁:  #+密码+#"</string>
-    <string name="main_prompt_panel_t4">"取        消:  按 * 键"</string>
-    <string name="main_prompt_panel_face">"按两次*开始人脸识别"</string>
-
-    <string name="main_prompt_passwd">"开锁密码:"</string>
-    <string name="main_prompt_admin">"工程密码:"</string>
-
-    <string name="main_text_build">"栋号："</string>
-    <string name="main_text_unit">"单元："</string>
-    <string name="main_text_room">"房号："</string>
-
-    <string name="ip_conflict">IP冲突</string>
-
-    <string name="sCaller_call">正在呼叫</string>
-    <string name="sCaller_call_err">呼叫失败</string>
-    <string name="sCaller_talk">正在通话</string>
-    <string name="sCaller_monitor">正在监视</string>
-    <string name="sCaller_no_answer">无人接听</string>
-    <string name="sCaller_finish">通话结束</string>
+    <string name="face_normal_name">"姓    名："</string>
+    <string name="face_normal_similarity">"相似度："</string>
+    <string name="face_normal_white">"状    态：正常"</string>
+    <string name="face_normal_black">"状    态：黑名单"</string>
+    <string name="face_normal_capture">"抓拍%d"</string>
 </resources>
