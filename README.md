@@ -14,10 +14,12 @@
 <p>3、doc目录：<br />
   开发说明文档。</p>
 <p>4、tools目录：<br />
-  网络升级工具。</p>
+  v700_upgrade.exe：网络升级工具。</p>
 <p>5、upgrade目录：<br />
   网络升级镜像包。</p>
-<p>6、特征值生成等工具需要与狄耐克进行商务沟通，暂时不直接对外开放。<br />
+<p>6、特征值生成工具：<br />
+  windows：http://access.ishanghome.com/tools/face_win_x86.zip<br />
+  linux：http://access.ishanghome.com/tools/face_linux_x64.tar.bz2
 </p>
 </body>
 </html>
