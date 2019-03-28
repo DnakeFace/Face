@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent" >
 
-    <include layout="@layout/osd_face" />
-
-    <include layout="@layout/osd_sid" />
-
     <TextView
         android:id="@+id/osd_ts"
         android:layout_width="wrap_content"
@@ -22,10 +18,14 @@
         android:id="@+id/osd_wx_qr2d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="44dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="8dp"
         android:visibility="gone" />
+
+    <include layout="@layout/osd_face" />
+
+    <include layout="@layout/osd_sid" />
 
 </RelativeLayout>
