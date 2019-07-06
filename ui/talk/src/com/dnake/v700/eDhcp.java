@@ -82,7 +82,6 @@ public class eDhcp {
 		dxml s = new dxml();
 		s.setText("/sys/user", p.getText("/dhcp/data/user"));
 		s.setText("/sys/passwd", p.getText("/dhcp/data/passwd"));
-		s.setInt("/sys/idx", p.getInt("/dhcp/data/idx", 0));
 		s.setText("/sys/server", from);
 
 		s.setText("/sys/lan/ip", p.getText("/dhcp/data/lan/ip"));

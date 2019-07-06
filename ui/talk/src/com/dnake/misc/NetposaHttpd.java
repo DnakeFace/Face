@@ -26,6 +26,10 @@ public class NetposaHttpd extends NanoHTTPD {
 		System.err.println("NetposaHttpd: " + port);
 	}
 
+	public static int mRid = 0;
+	public static boolean mResultOK = false;
+	public static int mResultCode = -1;
+
 	private Response doFacePicManager(IHTTPSession session, String body) {
 		String ack = "";
 		try {
@@ -60,13 +64,26 @@ public class NetposaHttpd extends NanoHTTPD {
 				String url = "/var/" + id + ".jpg";
 				utils.writeFile(pic, url);
 
+				mRid = (int) (Math.random()*0xFFFFFFF);
+				mResultOK = false;
+				mResultCode = -1;
+
 				dmsg req = new dmsg();
 				dxml p = new dxml();
 				p.setInt("/params/id", id);
 				p.setInt("/params/uid", 0);
+				p.setInt("/params/rid", mRid);
 				p.setInt("/params/black", 0);
 				p.setText("/params/url", url);
 				req.to("/face/ex/jpeg", p.toString());
+				for(int i=0; i<20; i++) {
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+					}
+					if (mResultOK)
+						break;
+				}
 
 				net_c.setInt("/sys/id", id);
 				net_c.setText("/sys/faceID", faceID);
@@ -77,7 +94,16 @@ public class NetposaHttpd extends NanoHTTPD {
 			}
 
 			JSONObject r = new JSONObject();
-			r.put("result", "0");
+			if (mResultCode == 0 || mResultCode == 200) {
+				r.put("result", "0");
+				r.put("msg", "OK");
+			} else {
+				r.put("result", "-2");
+				if (mResultCode == 400)
+					r.put("msg", "Not face detected!");
+				else
+					r.put("msg", "Face image decode error!");
+			}
 			r.put("faceID", faceID);
 			ack = r.toString();
 		} catch (JSONException e) {

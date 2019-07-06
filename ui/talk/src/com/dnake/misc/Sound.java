@@ -64,7 +64,7 @@ public class Sound {
 			else {
 				mp.setOnCompletionListener(new OnCompletionListener() {
 					public void onCompletion(MediaPlayer p) {
-						p.stop();
+						p.reset();
 						p.release();
 					}
 				});

@@ -36,7 +36,8 @@ public class utils {
 			NetworkInterface ne = NetworkInterface.getByInetAddress(InetAddress.getByName(utils.getLocalIp()));
 
 			mac = ne.getHardwareAddress();
-			mac_s = String.format("%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+			if (mac != null)
+				mac_s = String.format("%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

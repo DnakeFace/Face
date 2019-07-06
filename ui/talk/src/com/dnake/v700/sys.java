@@ -14,9 +14,9 @@ public final class sys {
 
 	public static int version_major = 1; // 主版本
 	public static int version_minor = 3; // 次版本
-	public static int version_minor2 = 0; // 次版本2
+	public static int version_minor2 = 1; // 次版本2
 
-	public static String version_date = "20181206"; // 日期
+	public static String version_date = "20190129"; // 日期
 
 	public static String version_ex = "(std)"; // 扩展标注
 

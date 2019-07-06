@@ -31,7 +31,6 @@ public class TalkLabel extends BaseLabel {
 	public static int mMode = 0; // 0:呼出, 1:呼入
 
 	private MediaPlayer mPlayer = null;
-	private OnCompletionListener mPlayerListener = null;
 
 	private TextView mText;
 	private long mAutoTs = 0;
@@ -79,15 +78,16 @@ public class TalkLabel extends BaseLabel {
 
 			sCaller.query(s);
 
-			mPlayerListener = new OnCompletionListener() {
+			OnCompletionListener listener = new OnCompletionListener() {
 				public void onCompletion(MediaPlayer p) {
 					if (mPlayer != null) {
+						mPlayer.reset();
 						mPlayer.release();
 						mPlayer = null;
 					}
 				}
 			};
-			mPlayer = Sound.play(Sound.ringback, true, mPlayerListener);
+			mPlayer = Sound.play(Sound.ringback, true, listener);
 		} else {
 			mAutoTs = System.currentTimeMillis();
 		}

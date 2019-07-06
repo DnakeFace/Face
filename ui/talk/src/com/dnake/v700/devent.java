@@ -1,7 +1,6 @@
 package com.dnake.v700;
 
 import java.io.File;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +10,7 @@ import android.graphics.BitmapFactory;
 
 import com.dnake.misc.FaceCompare;
 import com.dnake.misc.FaceNormal;
+import com.dnake.misc.NetposaHttpd;
 import com.dnake.misc.SysAccess;
 import com.dnake.misc.SysCard;
 import com.dnake.misc.SysProtocol;
@@ -549,6 +549,7 @@ public class devent {
 				FaceNormal.mFaceSim = p.getInt("/params/sim", -1);
 				FaceNormal.mFaceBlack = p.getInt("/params/black", 0); // 0:正常 1:黑名单
 				FaceNormal.mFaceUrl = p.getText("/params/url");
+				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
 				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
@@ -560,7 +561,6 @@ public class devent {
 				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
 				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
 
-				FaceNormal.mFaceTs = new Date();
 				FaceNormal.mFaceCms = false;
 				FaceNormal.mFaceWx = false;
 				FaceNormal.mFaceHave = true;
@@ -577,6 +577,7 @@ public class devent {
 				FaceNormal.mFaceUid = p.getInt("/params/id", 0);
 				FaceNormal.mFaceSim = p.getInt("/params/data", 0);
 				FaceNormal.mFaceUrl = p.getText("/params/url");
+				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
 				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
@@ -588,7 +589,6 @@ public class devent {
 				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
 				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
 
-				FaceNormal.mFaceTs = new Date();
 				FaceNormal.mFaceCms = true;
 				FaceNormal.mFaceWx = false;
 				FaceNormal.mFaceHave = true;
@@ -606,6 +606,7 @@ public class devent {
 				FaceNormal.mFaceSim = p.getInt("/params/data", 0);
 				FaceNormal.mFaceUrl = p.getText("/params/url");
 				FaceNormal.mFaceName = p.getText("/params/name");
+				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
 				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
@@ -617,7 +618,6 @@ public class devent {
 				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
 				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
 
-				FaceNormal.mFaceTs = new Date();
 				FaceNormal.mFaceCms = false;
 				FaceNormal.mFaceWx = true;
 				FaceNormal.mFaceHave = true;
@@ -641,6 +641,7 @@ public class devent {
 					d.identity = "";
 					d.black = false;
 					d.channel = p.getInt("/params/channel", 0);
+					d.ts = p.getInt("/params/ts", 0);
 
 					String jpeg = p.getText("/params/global/url");
 					d.global = new SysProtocol.FaceGlobal();
@@ -653,6 +654,22 @@ public class devent {
 					d.global.f_h = p.getInt("/params/face/h", 0);
 					SysProtocol.face(d);
 					FaceNormal.onFaceCapture(d);
+				}
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/face/jpeg") { //jpeg人脸添加结果
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				int code = p.getInt("/params/result", 0);
+				int rid = p.getInt("/params/rid", 0);
+				if (NetposaHttpd.mRid == rid) {
+					NetposaHttpd.mResultOK = true;
+					NetposaHttpd.mResultCode = code;
 				}
 			}
 		};

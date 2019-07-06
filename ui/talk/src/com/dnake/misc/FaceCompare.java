@@ -202,7 +202,7 @@ public class FaceCompare {
 		boolean ok = false, timeout = false;
 		for (int i = 0; i < mData.size(); i++) {
 			Data d = mData.get(i);
-			if (mId.equalsIgnoreCase(d.mID)) {
+			if (mId != null && mId.equalsIgnoreCase(d.mID)) {
 				if (!d.mSTp.equals("长期") && ts > Integer.parseInt(d.mSTp)) {
 					timeout = true;
 					mOsdTitle.setText("证件已过期");

@@ -1,7 +1,5 @@
 package com.dnake.misc;
 
-import java.util.Date;
-
 import com.dnake.misc.SysProtocol.FaceData;
 import com.dnake.panel.R;
 import com.dnake.v700.dxml;
@@ -39,7 +37,7 @@ public class FaceNormal {
 	public static String mFaceUrl;
 	public static boolean mFaceCms = false;
 	public static boolean mFaceWx = false;
-	public static Date mFaceTs;
+	public static long mFaceTs;
 	public static SysProtocol.FaceGlobal mFaceGlobal;
 
 	public static void onStart() {
@@ -138,6 +136,7 @@ public class FaceNormal {
 			d.identity = identity;
 			d.black = black;
 			d.global = mFaceGlobal;
+			d.ts = mFaceTs;
 			for (int i = 0; i < (mFaceData.length - 1); i++) {
 				mFaceData[i] = mFaceData[i + 1];
 			}

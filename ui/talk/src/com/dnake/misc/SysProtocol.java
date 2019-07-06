@@ -22,7 +22,7 @@ public final class SysProtocol {
 	public static String mHost = "";
 	public static String mHost2 = "";
 	public static String mCode = "";
-	public static int mProtocol = 0;
+	public static int mProtocol = 0; // 1:阡信德 2:乐视 3:东方网力 4:上海特斯联
 
 	public static class FaceGlobal { // 全景抓拍
 		public byte[] jpeg;
@@ -40,6 +40,7 @@ public final class SysProtocol {
 		public Bitmap bmp;
 		public int sim;
 		public int channel;
+		public long ts;
 		public String identity; // 身份证号码
 		public boolean black;
 		public FaceGlobal global;
@@ -258,7 +259,7 @@ public final class SysProtocol {
 
 			json.put("similarity", String.valueOf(d.sim / 100.0));
 			json.put("compareResult", (d.sim != 0) ? "1" : "0");
-			json.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
+			json.put("timeStamp", d.ts);
 			json.put("captureType", "1");
 
 			if (d.bmp != null) {
@@ -310,9 +311,9 @@ public final class SysProtocol {
 					FaceData d = mData.poll();
 					if (mProtocol == 1) {
 						doQXDProtocol(d);
-					} else if (mProtocol == 2) {
+					} else if (mProtocol == 2) { // 乐视协议
 						doLeProtocol(d);
-					} else if (mProtocol == 3) {
+					} else if (mProtocol == 3) { //上海东方网力
 						doNetposaProtocol(d);
 					}
 				}
