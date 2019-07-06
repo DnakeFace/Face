@@ -22,7 +22,7 @@ public final class SysProtocol {
 	public static String mHost = "";
 	public static String mHost2 = "";
 	public static String mCode = "";
-	public static int mProtocol = 0; // 1:阡信德 2:乐视 3:东方网力 4:上海特斯联
+	public static int mProtocol = 0;
 
 	public static class FaceGlobal { // 全景抓拍
 		public byte[] jpeg;
