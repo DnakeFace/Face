@@ -40,11 +40,13 @@ public class HttpConnect {
 		}
 
 		@Override
-		public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+		public void checkClientTrusted(X509Certificate[] arg0, String arg1)
+				throws CertificateException {
 		}
 
 		@Override
-		public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+		public void checkServerTrusted(X509Certificate[] arg0, String arg1)
+				throws CertificateException {
 		}
 	} };
 
@@ -72,13 +74,25 @@ public class HttpConnect {
 			HttpURLConnection http = (HttpURLConnection) u.openConnection();
 			if (mContentType != null)
 				http.setRequestProperty("Content-Type", mContentType);
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(10*1000);
+			http.setConnectTimeout(30 * 1000);
+			http.setReadTimeout(30 * 1000);
 			result = http.getResponseCode();
 			if (result == 200) {
-				InputStreamReader in = new InputStreamReader(http.getInputStream());
+				InputStreamReader in = new InputStreamReader(
+						http.getInputStream());
 				BufferedReader bReader = new BufferedReader(in);
-				while(true) {
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			} else {
+				InputStreamReader in = new InputStreamReader(
+						http.getErrorStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
 					String s = bReader.readLine();
 					if (s == null)
 						break;
@@ -89,6 +103,7 @@ public class HttpConnect {
 			http.disconnect();
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		onBody(result, body);
 		mResult = result;
@@ -103,13 +118,25 @@ public class HttpConnect {
 			if (mContentType != null)
 				http.setRequestProperty("Content-Type", mContentType);
 			setTrustAllHosts(http);
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(10*1000);
+			http.setConnectTimeout(10 * 1000);
+			http.setReadTimeout(10 * 1000);
 			result = http.getResponseCode();
 			if (result == 200) {
-				InputStreamReader in = new InputStreamReader(http.getInputStream());
+				InputStreamReader in = new InputStreamReader(
+						http.getInputStream());
 				BufferedReader bReader = new BufferedReader(in);
-				while(true) {
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			} else {
+				InputStreamReader in = new InputStreamReader(
+						http.getErrorStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
 					String s = bReader.readLine();
 					if (s == null)
 						break;
@@ -133,15 +160,17 @@ public class HttpConnect {
 			HttpURLConnection http = (HttpURLConnection) u.openConnection();
 			if (mContentType != null)
 				http.setRequestProperty("Content-Type", mContentType);
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(10*1000);
- 
+			http.setConnectTimeout(10 * 1000);
+			http.setReadTimeout(10 * 1000);
+
 			if (data != null) {
 				byte[] d = data.getBytes();
 				http.setRequestMethod("POST");
-				http.setRequestProperty("Content-Length", String.valueOf(d.length));
+				http.setRequestProperty("Content-Length",
+						String.valueOf(d.length));
 				http.setDoOutput(true);
-				DataOutputStream out = new DataOutputStream(http.getOutputStream());
+				DataOutputStream out = new DataOutputStream(
+						http.getOutputStream());
 				out.write(d);
 				out.flush();
 				out.close();
@@ -149,9 +178,77 @@ public class HttpConnect {
 
 			result = http.getResponseCode();
 			if (result == 200) {
-				InputStreamReader in = new InputStreamReader(http.getInputStream());
+				InputStreamReader in = new InputStreamReader(
+						http.getInputStream());
 				BufferedReader bReader = new BufferedReader(in);
-				while(true) {
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			} else {
+				InputStreamReader in = new InputStreamReader(
+						http.getErrorStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			}
+			http.disconnect();
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
+		}
+		onBody(result, body);
+		mResult = result;
+	}
+
+	public void doDelete(String url, String data) {
+		String body = new String();
+		int result = 404;
+		try {
+			URL u = new URL(url);
+			HttpURLConnection http = (HttpURLConnection) u.openConnection();
+			if (mContentType != null)
+				http.setRequestProperty("Content-Type", mContentType);
+			http.setConnectTimeout(10 * 1000);
+			http.setReadTimeout(10 * 1000);
+			http.setRequestMethod("DELETE");
+
+			if (data != null) {
+				byte[] d = data.getBytes();
+				http.setRequestProperty("Content-Length",
+						String.valueOf(d.length));
+				http.setDoOutput(true);
+				DataOutputStream out = new DataOutputStream(
+						http.getOutputStream());
+				out.write(d);
+				out.flush();
+				out.close();
+			}
+
+			result = http.getResponseCode();
+			if (result == 200) {
+				InputStreamReader in = new InputStreamReader(
+						http.getInputStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			} else {
+				InputStreamReader in = new InputStreamReader(
+						http.getErrorStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
 					String s = bReader.readLine();
 					if (s == null)
 						break;
@@ -176,15 +273,17 @@ public class HttpConnect {
 			if (mContentType != null)
 				http.setRequestProperty("Content-Type", mContentType);
 			setTrustAllHosts(http);
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(10*1000);
+			http.setConnectTimeout(10 * 1000);
+			http.setReadTimeout(10 * 1000);
 
 			if (data != null) {
 				byte[] d = data.getBytes();
 				http.setRequestMethod("POST");
-				http.setRequestProperty("Content-Length", String.valueOf(d.length));
+				http.setRequestProperty("Content-Length",
+						String.valueOf(d.length));
 				http.setDoOutput(true);
-				DataOutputStream out = new DataOutputStream(http.getOutputStream());
+				DataOutputStream out = new DataOutputStream(
+						http.getOutputStream());
 				out.write(d);
 				out.flush();
 				out.close();
@@ -192,9 +291,21 @@ public class HttpConnect {
 
 			result = http.getResponseCode();
 			if (result == 200) {
-				InputStreamReader in = new InputStreamReader(http.getInputStream());
+				InputStreamReader in = new InputStreamReader(
+						http.getInputStream());
 				BufferedReader bReader = new BufferedReader(in);
-				while(true) {
+				while (true) {
+					String s = bReader.readLine();
+					if (s == null)
+						break;
+					body += s;
+				}
+				in.close();
+			} else {
+				InputStreamReader in = new InputStreamReader(
+						http.getErrorStream());
+				BufferedReader bReader = new BufferedReader(in);
+				while (true) {
 					String s = bReader.readLine();
 					if (s == null)
 						break;

@@ -120,7 +120,7 @@ public class utils {
 			FileOutputStream out = new FileOutputStream(f);
 			b.compress(Bitmap.CompressFormat.JPEG, 90, out);
 			out.flush();
-            out.close();
+			out.close();
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}

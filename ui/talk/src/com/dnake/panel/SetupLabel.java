@@ -212,7 +212,7 @@ public class SetupLabel extends BaseLabel {
 					if (login.passwd(login_passwd.getText().toString())) {
 						btn.setVisibility(View.VISIBLE);
 					} else {
-						Sound.play(Sound.passwd_err, false);
+						Sound.play(Sound.OrderPasswdErr);
 						btn.setVisibility(View.GONE);
 					}
 			}});

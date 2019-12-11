@@ -5,23 +5,25 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 
-import com.dnake.misc.FaceCompare;
-import com.dnake.misc.FaceNormal;
-import com.dnake.misc.NetposaHttpd;
 import com.dnake.misc.SysAccess;
 import com.dnake.misc.SysCard;
-import com.dnake.misc.SysProtocol;
 import com.dnake.misc.Sound;
-import com.dnake.misc.SysSpecial;
 import com.dnake.misc.SysTalk;
 import com.dnake.misc.sCaller;
 import com.dnake.panel.BaseLabel;
+import com.dnake.panel.FaceCompare;
 import com.dnake.panel.FaceLabel;
+import com.dnake.panel.FaceNormal;
 import com.dnake.panel.TalkLabel;
 import com.dnake.panel.WakeTask;
+import com.dnake.special.NetposaHttpd;
+import com.dnake.special.SysProtocol;
+import com.dnake.special.SysSpecial;
+import com.dnake.special.YmsProtocol;
 
 public class devent {
 	private static List<devent> elist = null;
@@ -223,6 +225,7 @@ public class devent {
 				dmsg.ack(200, null);
 				WakeTask.acquire();
 				login.refresh();
+				FaceLabel.mTouchTs = System.currentTimeMillis();
 			}
 		};
 		elist.add(de);
@@ -264,7 +267,7 @@ public class devent {
 				int io = p.getInt("/params/io", 0);
 				int data = p.getInt("/params/data", 0);
 				if (data == 1)
-					Sound.play(Sound.press, false);
+					Sound.play(Sound.OrderPress);
 
 				if (io == 1 && data == 0) { //快速注册特殊标志
 					File f = new File("/dnake/bin/fastr");
@@ -315,7 +318,7 @@ public class devent {
 				dmsg.ack(200, null);
 				dmsg req = new dmsg();
 				req.to("/face/unlock", body);
-				Sound.play(Sound.unlock, false);
+				Sound.play(Sound.OrderUnlock);
 			}
 		};
 		elist.add(de);
@@ -338,12 +341,12 @@ public class devent {
 					if (SysAccess.admin.card != null && SysAccess.admin.card.equalsIgnoreCase("0")) { //设置管理卡
 						SysAccess.admin.card = card;
 						SysAccess.save();
-						Sound.play(Sound.press, false);
+						Sound.play(Sound.OrderPress);
 						return;
 					}
 					if (card.equalsIgnoreCase(SysAccess.admin.card)) { //管理卡加卡模式
 						SysAccess.admin.ts = System.currentTimeMillis();
-						Sound.play(Sound.press, false);
+						Sound.play(Sound.OrderPress);
 						return;
 					}
 
@@ -402,8 +405,80 @@ public class devent {
 				} else {
 					//非法卡上报，上海地标
 					SysAccess.logger(0, 0, 0, 0, card, 0);
-					Sound.play(Sound.card_err, false);
+					Sound.play(Sound.OrderCardFailed);
 				}
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/elev/appoint") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+				dmsg req = new dmsg();
+				req.to("/control/elev/appoint", body);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/elev/permit") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+				dmsg req = new dmsg();
+				req.to("/control/elev/permit", body);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/elev/join") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/qr") { //二维码
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				String data = p.getText("/params/data");
+				if (data != null) {
+					if (data.startsWith("acp://"))
+						SysSpecial.doACP(data);
+					else if (data.startsWith("haina:"))
+						SysSpecial.doHaina(data);
+					else
+						Sound.play(Sound.OrderCardFailed);
+				} else
+					Sound.play(Sound.OrderCardFailed);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/exit") { //开门按钮
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				int data = p.getInt("/params/data", 0);
+				if (data == 0) {
+					dmsg req = new dmsg();
+					req.to("/face/unlock", null);
+					Sound.play(Sound.OrderUnlock);
+				}
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/v170/sensor") { //门磁
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
 			}
 		};
 		elist.add(de);
@@ -451,34 +526,6 @@ public class devent {
 		};
 		elist.add(de);
 
-		de = new devent("/ui/v170/elev/appoint") {
-			@Override
-			public void process(String body) {
-				dmsg.ack(200, null);
-				dmsg req = new dmsg();
-				req.to("/control/elev/appoint", body);
-			}
-		};
-		elist.add(de);
-
-		de = new devent("/ui/v170/elev/permit") {
-			@Override
-			public void process(String body) {
-				dmsg.ack(200, null);
-				dmsg req = new dmsg();
-				req.to("/control/elev/permit", body);
-			}
-		};
-		elist.add(de);
-
-		de = new devent("/ui/v170/elev/join") {
-			@Override
-			public void process(String body) {
-				dmsg.ack(200, null);
-			}
-		};
-		elist.add(de);
-
 		de = new devent("/ui/ir/detect") { //人体感应
 			@Override
 			public void process(String body) {
@@ -520,6 +567,7 @@ public class devent {
 			public void process(String body) {
 				dmsg.ack(200, null);
 				FaceLabel.mStartVo = true;
+				SysTalk.mBootEnd = true;
 			}
 		};
 		elist.add(de);
@@ -530,7 +578,7 @@ public class devent {
 				dmsg.ack(200, null);
 				WakeTask.acquire();
 				FaceLabel.mTs = System.currentTimeMillis();
-				if (FaceLabel.mContext == null) {
+				if (FaceLabel.mContext == null && sys.ts(FaceLabel.mTouchTs) > 30*1000) {
 					Intent it = new Intent(SysTalk.mContext, FaceLabel.class);
 					it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					SysTalk.mContext.startActivity(it);
@@ -675,22 +723,16 @@ public class devent {
 		};
 		elist.add(de);
 
-		de = new devent("/ui/v170/qr") { //二维码
+		de = new devent("/ui/face/lived") { //活体检测事件
 			@Override
 			public void process(String body) {
 				dmsg.ack(200, null);
 
 				dxml p = new dxml(body);
-				String data = p.getText("/params/data");
-				if (data != null) {
-					if (data.startsWith("acp://"))
-						SysSpecial.doACP(data);
-					else if (data.startsWith("haina:"))
-						SysSpecial.doHaina(data);
-					else
-						Sound.play(Sound.card_err, false);
-				} else
-					Sound.play(Sound.card_err, false);
+				FaceLabel.FaceLivedData d = new FaceLabel.FaceLivedData();
+				d.mode = p.getInt("/params/mode", 0);
+				d.url = p.getText("/params/url");
+				FaceLabel.mFaceLived.offer(d);
 			}
 		};
 		elist.add(de);
@@ -754,6 +796,55 @@ public class devent {
 				if (SysProtocol.mHost != null && !SysProtocol.mHost.startsWith("http://") && !SysProtocol.mHost.startsWith("https://"))
 					SysProtocol.mHost = "http://"+SysProtocol.mHost;
 				SysProtocol.save();
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/web/yms/read") {
+			@Override
+			public void process(String body) {
+				dxml p = new dxml();
+				p.setText("/params/school", YmsProtocol.m_school_id);
+				p.setText("/params/app/url", YmsProtocol.m_url);
+				p.setText("/params/app/id", YmsProtocol.m_app_id);
+				p.setText("/params/app/key", YmsProtocol.m_app_key);
+				p.setText("/params/app/secret", YmsProtocol.m_app_secret);
+				p.setText("/params/app/phone", YmsProtocol.m_app_phone);
+				p.setText("/params/devid", YmsProtocol.m_devid);
+				dmsg.ack(200, p.toString());
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/web/yms/write") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				YmsProtocol.m_url = p.getText("/params/app/url", YmsProtocol.m_url);
+				YmsProtocol.m_app_id = p.getText("/params/app/id", YmsProtocol.m_app_id);
+				YmsProtocol.m_app_key = p.getText("/params/app/key", YmsProtocol.m_app_key);
+				YmsProtocol.m_app_secret = p.getText("/params/app/secret", YmsProtocol.m_app_secret);
+				YmsProtocol.m_app_phone = p.getText("/params/app/phone", YmsProtocol.m_app_phone);
+				YmsProtocol.m_devid = p.getText("/params/devid", YmsProtocol.m_devid);
+				YmsProtocol.save();
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/web/yms/control") {
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+				dxml p = new dxml(body);
+				String cmd = p.getText("/params/cmd", "");
+				if (cmd.equals("add"))
+					YmsProtocol.doRegister();
+				else if (cmd.equals("delete"))
+					YmsProtocol.doDelete();
+				else if (cmd.equals("sync"))
+					YmsProtocol.m_person_ts = 0;
 			}
 		};
 		elist.add(de);

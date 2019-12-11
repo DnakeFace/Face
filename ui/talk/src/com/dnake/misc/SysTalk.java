@@ -3,8 +3,13 @@ package com.dnake.misc;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
+import com.dnake.panel.FaceCompare;
 import com.dnake.panel.TalkLabel;
 import com.dnake.panel.WakeTask;
+import com.dnake.special.SysProtocol;
+import com.dnake.special.SysSpecial;
+import com.dnake.special.YmsProtocol;
 import com.dnake.v700.devent;
 import com.dnake.v700.dmsg;
 import com.dnake.v700.eDhcp;
@@ -17,8 +22,6 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -37,8 +40,6 @@ public class SysTalk extends Service {
 	public static Queue<String> Keys = new LinkedList<String>();
 
 	private static Handler e_touch = new Handler() {
-		private MediaPlayer mPlayer = null;
-
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -52,28 +53,17 @@ public class SysTalk extends Service {
 				} catch (InterruptedException e) {
 				}
 			}
-			if (mPlayer != null) {
-				mPlayer.release();
-				mPlayer = null;
-			}
-			OnCompletionListener listener = new OnCompletionListener() {
-				public void onCompletion(MediaPlayer p) {
-					p.reset();
-					p.release();
-					mPlayer = null;
-				}
-			};
-
-			Sound.load();
 			if (Sound.key_0_9) {
 				String key = (String) msg.obj;
-				int n = key.charAt(0)-'0';
-				if (n >= 0 && n <= 9) {
-					mPlayer = Sound.play(Sound.key[n], false, listener);
-				} else
-					mPlayer = Sound.play(Sound.press, false, listener);
-			} else
-				mPlayer = Sound.play(Sound.press, false, listener);
+				int k = key.charAt(0)-'0';
+				if (k >= 0 && k <= 9) {
+					Sound.play(k);
+				} else {
+					Sound.play(Sound.OrderPress);
+				}
+			} else {
+				Sound.play(Sound.OrderPress);
+			}
 
 			tBroadcast();
 		}
@@ -138,6 +128,7 @@ public class SysTalk extends Service {
 		SysSpecial.load();
 		SDTLogger.load();
 		SysProtocol.load();
+		YmsProtocol.load();
 
 		eDhcp.start();
 		FaceCompare.start();
@@ -153,7 +144,7 @@ public class SysTalk extends Service {
 				mBootEnd = true;
 			}
 		};
-		e.sendEmptyMessageDelayed(0, 10*1000);
+		e.sendEmptyMessageDelayed(0, 20*1000);
 
 		utils.ioctl.rgb(utils.ioctl.R);
 	}

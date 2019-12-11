@@ -1,6 +1,5 @@
 package com.dnake.panel;
 
-import com.dnake.misc.Sound;
 import com.dnake.misc.SysTalk;
 import com.dnake.v700.sys;
 
@@ -18,25 +17,30 @@ public class BaseLabel extends Activity {
 	public static long mKeyTs = System.currentTimeMillis();
 	public static long mTimerWDT = 0;
 
-	private Handler e_timer = null;
+	private BaseLabel mBaseCtx = this;
+
+	private Handler mTimer = null;
 	protected Boolean bFinish = true;
 
 	private Thread bThread = null;
 	protected Boolean bRun = true;
 
-	public int tPeriod = 100;
+	public int mPeriod = 100;
 
 	public class ProcessThread implements Runnable {
 		@Override
 		public void run() {
 			while(bRun) {
 				try {
-					Thread.sleep(tPeriod);
+					Thread.sleep(mPeriod);
 				} catch (InterruptedException e) {
 				}
 				if (WakeTask.isScreenOn()) {
-					if (e_timer != null)
-						e_timer.sendMessage(e_timer.obtainMessage());
+					synchronized(mBaseCtx) {
+						if (mTimer != null) {
+							mTimer.sendMessage(mTimer.obtainMessage());
+						}
+					}
 				}
 			}
 		}
@@ -55,8 +59,6 @@ public class BaseLabel extends Activity {
 		Resources r = this.getResources();
 		sys.scaled = r.getDisplayMetrics().density;
 
-		Sound.load();
-
 		//页面亮度设置成最亮
 		Window w = this.getWindow();
 		WindowManager.LayoutParams lp = w.getAttributes();
@@ -68,71 +70,30 @@ public class BaseLabel extends Activity {
 	public void onStart() {
 		super.onStart();
 		SysTalk.Keys.clear();
-
-		this.setup();
-	}
-
-	private void setup() {
-		WakeTask.acquire();
-
-		if (e_timer == null) {
-			e_timer = new Handler() {
-				@Override
-				public void handleMessage(Message msg) {
-					super.handleMessage(msg);
-
-					if (isFinishing())
-						return;
-
-					mTimerWDT = System.currentTimeMillis();
-					onTimer();
-
-					if (SysTalk.Keys.size() > 0) {
-						mKeyTs = System.currentTimeMillis();
-						String s = SysTalk.Keys.poll();
-						if (s != null)
-							onKey(s);
-					}
-
-					if (bFinish && WakeTask.timeout()) {
-						tStop();
-						if (!isFinishing())
-							finish();
-					}
-				}
-			};
-		}
-		this.tStart();
 	}
 
 	@Override
-    public void onStop() {
+	public void onStop() {
 		super.onStop();
 
-		e_timer = null;
-		this.tStop();
-	}
-
-	@Override
-	public void onRestart() {
-		super.onRestart();
-
-		if (bFinish && WakeTask.timeout()) {
+		synchronized(mBaseCtx) {
+			mTimer = null;
 			this.tStop();
-			finish();
-		} else
-			this.tStart();
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if (bFinish && WakeTask.timeout()) {
-			this.tStop();
-			finish();
-		}else
-			this.tStart();
+		synchronized(mBaseCtx) {
+			if (bFinish && WakeTask.timeout()) {
+				this.tStop();
+				finish();
+			} else {
+				this.setup();
+			}
+		}
 	}
 
 	private void tStart() {
@@ -151,5 +112,44 @@ public class BaseLabel extends Activity {
 			bThread = null;
 		}
 		mTimerWDT = 0;
+	}
+
+	private void setup() {
+		WakeTask.acquire();
+
+		if (mTimer == null) {
+			mTimer = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+
+					if (isFinishing())
+						return;
+
+					mTimerWDT = System.currentTimeMillis();
+
+					synchronized(mBaseCtx) {
+						onTimer();
+					}
+
+					if (SysTalk.Keys.size() > 0) {
+						mKeyTs = System.currentTimeMillis();
+						String s = SysTalk.Keys.poll();
+						if (s != null) {
+							synchronized(mBaseCtx) {
+								onKey(s);
+							}
+						}
+					}
+
+					if (bFinish && WakeTask.timeout()) {
+						tStop();
+						if (!isFinishing())
+							finish();
+					}
+				}
+			};
+		}
+		this.tStart();
 	}
 }

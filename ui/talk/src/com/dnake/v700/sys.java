@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.dnake.misc.Sound;
 import com.dnake.misc.SysTalk;
 
 import android.annotation.SuppressLint;
@@ -13,10 +14,10 @@ import android.content.res.Configuration;
 public final class sys {
 
 	public static int version_major = 1; // 主版本
-	public static int version_minor = 3; // 次版本
+	public static int version_minor = 4; // 次版本
 	public static int version_minor2 = 1; // 次版本2
 
-	public static String version_date = "20190129"; // 日期
+	public static String version_date = "20190905"; // 日期
 
 	public static String version_ex = "(std)"; // 扩展标注
 
@@ -193,8 +194,11 @@ public final class sys {
 				feed.url[i] = p.getText("/sys/feed/url" + i);
 			}
 			payload.H264 = p.getInt("/sys/payload/h264", 102);
-		} else
+		} else {
 			save();
+		}
+
+		Sound.load();
 	}
 
 	public static void save() {
@@ -387,6 +391,8 @@ public final class sys {
 		p.setText("/params/language", s);
 		p.setText("/params/country", s2);
 		req.to("/settings/locale", p.toString());
+
+		Sound.load();
 	}
 
 	public static int sdt() {
@@ -412,15 +418,5 @@ public final class sys {
 		} catch (IOException e) {
 		}
 		return sdt;
-	}
-
-	private static int mH3C = -1;
-	public static int h3c() {
-		if (mH3C == -1) {
-			dxml p = new dxml();
-			p.load("/dnake/bin/special.xml");
-			mH3C = p.getInt("/sys/h3c", 0);
-		}
-		return mH3C;
 	}
 }

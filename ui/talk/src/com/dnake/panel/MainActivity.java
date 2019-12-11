@@ -50,8 +50,9 @@ public class MainActivity extends BaseLabel {
 								Intent it = new Intent(MainActivity.this, SDTLoggerLabel.class);
 								it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 								startActivity(it);
-							} else
-								Sound.play(Sound.passwd_err, false);
+							} else {
+								Sound.play(Sound.OrderPasswdErr);
+							}
 						}
 					});
 					b.setNegativeButton(R.string.login_passwd_cancel, null);
@@ -85,8 +86,9 @@ public class MainActivity extends BaseLabel {
 								Intent it = new Intent(MainActivity.this, SDTErrLabel.class);
 								it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 								startActivity(it);
-							} else
-								Sound.play(Sound.passwd_err, false);
+							} else {
+								Sound.play(Sound.OrderPasswdErr);
+							}
 						}
 					});
 					b.setNegativeButton(R.string.login_passwd_cancel, null);

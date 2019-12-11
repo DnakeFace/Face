@@ -6,8 +6,6 @@ import com.dnake.v700.dxml;
 import com.dnake.v700.sys;
 
 import android.annotation.SuppressLint;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 
 @SuppressLint("DefaultLocale")
 public final class SysAccess {
@@ -110,8 +108,6 @@ public final class SysAccess {
 		}
 	}
 
-	private static MediaPlayer player = null;
-
 	public static void unlock(int index) {
 		if (sys.talk.limit != 0) //特殊密码锁定，限制呼叫
 			return;
@@ -121,16 +117,7 @@ public final class SysAccess {
 		dmsg req = new dmsg();
 		req.to("/face/unlock", null);
 
-		if (player == null) {
-			OnCompletionListener listener = new OnCompletionListener() {
-				public void onCompletion(MediaPlayer p) {
-					player.reset();
-					player.release();
-					player = null;
-				}
-			};
-			player = Sound.play(Sound.unlock, false, listener);
-		}
+		Sound.play(Sound.OrderUnlock);
 	}
 
 	public static void elev(int f, int r) {

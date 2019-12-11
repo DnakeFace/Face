@@ -45,7 +45,7 @@ public class TalkLabel extends BaseLabel {
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		mContext = this;
-		tPeriod = 300;
+		mPeriod = 300;
 
 		mText = (TextView) this.findViewById(R.id.prompt_text);
 
@@ -80,11 +80,10 @@ public class TalkLabel extends BaseLabel {
 
 			OnCompletionListener listener = new OnCompletionListener() {
 				public void onCompletion(MediaPlayer p) {
-					if (mPlayer != null) {
-						mPlayer.reset();
-						mPlayer.release();
-						mPlayer = null;
-					}
+					p.stop();
+					p.reset();
+					p.release();
+					mPlayer = null;
 				}
 			};
 			mPlayer = Sound.play(Sound.ringback, true, listener);
