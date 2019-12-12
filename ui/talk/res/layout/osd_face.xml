@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -114,7 +114,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -131,7 +131,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -148,7 +148,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:alpha="0.9"
+            android:alpha="0.7"
             android:scaleType="fitCenter" />
 
         <TextView
@@ -159,6 +159,32 @@
             android:alpha="0.9"
             android:textSize="16sp" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/osd_face_lived"
+        android:layout_width="384dp"
+        android:layout_height="384dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/face_lived_0"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/osd_face_lived_bmp"
+            android:layout_width="340dp"
+            android:layout_height="340dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/osd_face_lived_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/osd_face_lived"
+        android:layout_centerHorizontal="true"
+        android:text="@string/face_osd_lived"
+        android:textSize="30sp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/osd_face_result"
@@ -220,4 +246,31 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/osd_face_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone"
+        android:background="@drawable/sdt_osd_tips" >
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/osd_face_tips"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone"
+        android:background="@drawable/sdt_osd_tips" >
+
+        <TextView
+            android:id="@+id/osd_face_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/face_normal_prompt"
+            android:textSize="32sp" />
+    </RelativeLayout>
 </RelativeLayout>

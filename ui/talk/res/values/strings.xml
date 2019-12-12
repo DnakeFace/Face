@@ -35,4 +35,6 @@
     <string name="face_normal_white">"Status:   Normal"</string>
     <string name="face_normal_black">"Status:   Black"</string>
     <string name="face_normal_capture">"C%d"</string>
+    <string name="face_normal_prompt">"Please look at the camera."</string>
+    <string name="face_osd_lived">"Spoofing detect..."</string>
 </resources>
