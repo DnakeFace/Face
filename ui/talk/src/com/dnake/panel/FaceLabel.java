@@ -241,27 +241,27 @@ public class FaceLabel extends BaseLabel {
 
 	public static Bitmap doBitmapCirle(Bitmap bmp) {
 		//获取bmp的宽高 小的一个做为圆的直径r
-	    int w = bmp.getWidth();
-	    int h = bmp.getHeight();
-	    int r = Math.min(w, h);
+		int w = bmp.getWidth();
+		int h = bmp.getHeight();
+		int r = Math.min(w, h);
 	 
-	    //创建一个paint
-	    Paint paint = new Paint();
-	    paint.setAntiAlias(true);
+		//创建一个paint
+		Paint paint = new Paint();
+		paint.setAntiAlias(true);
 	 
-	   //新创建一个Bitmap对象newBitmap 宽高都是r
-	    Bitmap bm = Bitmap.createBitmap(r, r, Bitmap.Config.ARGB_8888);
+		//新创建一个Bitmap对象newBitmap 宽高都是r
+		Bitmap bm = Bitmap.createBitmap(r, r, Bitmap.Config.ARGB_8888);
 	 
-	   //创建一个使用newBitmap的Canvas对象
-	    Canvas canvas = new Canvas(bm);
+		//创建一个使用newBitmap的Canvas对象
+		Canvas canvas = new Canvas(bm);
 	 
-	    //创建一个Path对象，path添加一个圆 圆心半径均是r / 2， Path.Direction.CW顺时针方向
-	    Path path = new Path();
-	    path.addCircle(r / 2, r / 2, r / 2, Path.Direction.CW);
-	    //canvas绘制裁剪区域
-	    canvas.clipPath(path);
-	    //canvas将图画到留下的圆形区域上
-	    canvas.drawBitmap(bmp, 0, 0, paint);
-	    return bm;
+		//创建一个Path对象，path添加一个圆 圆心半径均是r / 2， Path.Direction.CW顺时针方向
+		Path path = new Path();
+		path.addCircle(r / 2, r / 2, r / 2, Path.Direction.CW);
+		//canvas绘制裁剪区域
+		canvas.clipPath(path);
+		//canvas将图画到留下的圆形区域上
+		canvas.drawBitmap(bmp, 0, 0, paint);
+		return bm;
 	}
 }

@@ -75,13 +75,11 @@
         <activity
             android:name="com.dnake.panel.TalkLabel"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"
             android:theme="@style/v900" >
         </activity>
         <activity
             android:name="com.dnake.panel.FaceLabel"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"
             android:theme="@style/v900" >
         </activity>
         <activity

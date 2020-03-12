@@ -29,6 +29,10 @@ public class Sound {
 	public static String sid_invalid = "/dnake/bin/prompt/sdt_invalid.wav";
 
 	public static String face_success = "/dnake/bin/prompt/face_success.wav";
+	public static String face_mask_err = "/dnake/bin/prompt/face_mask_err.wav";
+
+	public static String thermal_alarm = "/dnake/bin/prompt/thermal_alarm.wav";
+	public static String thermal_ok = "/dnake/bin/prompt/thermal_ok.wav";
 
 	public static String[] key = new String[10];
 	public static boolean key_0_9 = false;
@@ -66,6 +70,8 @@ public class Sound {
 		mSoundPoolMap.put(OrderSidInvalid, mSoundPool.load(sid_invalid, OrderSidInvalid));
 		mSoundPoolMap.put(OrderPasswdErr, mSoundPool.load(passwd_err, OrderPasswdErr));
 		mSoundPoolMap.put(OrderFaceOK, mSoundPool.load(face_success, OrderFaceOK));
+		mSoundPoolMap.put(OrderThermalOK, mSoundPool.load(thermal_ok, OrderThermalOK));
+		mSoundPoolMap.put(OrderFaceMaskErr, mSoundPool.load(face_mask_err, OrderFaceMaskErr));
 	}
 
 	public static MediaPlayer play(String url, Boolean looping) {
@@ -146,6 +152,8 @@ public class Sound {
 	public static int OrderSidInvalid = 105;
 	public static int OrderPasswdErr = 106;
 	public static int OrderFaceOK = 107;
+	public static int OrderThermalOK = 108;
+	public static int OrderFaceMaskErr = 109;
 
 	private static SoundPool mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 	private static HashMap<Integer, Integer> mSoundPoolMap = new HashMap<Integer, Integer>();

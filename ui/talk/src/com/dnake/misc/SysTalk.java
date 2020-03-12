@@ -32,6 +32,9 @@ public class SysTalk extends Service {
 	public static Context mContext = null;
 	public static boolean mBootEnd = false;
 
+	public static int mCameraWidth = 1280;
+	public static int mCameraHeight = 720;
+
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
@@ -162,8 +165,9 @@ public class SysTalk extends Service {
 				Thread.sleep(1*1000);
 			} catch (InterruptedException e) {
 			}
-			if (utils.getLocalIp() == null)
+			if (utils.getLocalIp() == null) {
 				utils.eth0_reset();
+			}
 
 			utils.buzzer(100);
 
@@ -172,7 +176,7 @@ public class SysTalk extends Service {
 				utils.process();
 				sLocale.process();
 				try {
-					Thread.sleep(40);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

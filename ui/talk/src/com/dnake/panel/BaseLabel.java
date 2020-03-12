@@ -20,17 +20,17 @@ public class BaseLabel extends Activity {
 	private BaseLabel mBaseCtx = this;
 
 	private Handler mTimer = null;
-	protected Boolean bFinish = true;
+	protected Boolean mAutoFinish = true;
 
-	private Thread bThread = null;
-	protected Boolean bRun = true;
+	private Thread mThread = null;
+	protected Boolean mRunning = true;
 
 	public int mPeriod = 100;
 
 	public class ProcessThread implements Runnable {
 		@Override
 		public void run() {
-			while(bRun) {
+			while(mRunning) {
 				try {
 					Thread.sleep(mPeriod);
 				} catch (InterruptedException e) {
@@ -87,7 +87,7 @@ public class BaseLabel extends Activity {
 		super.onResume();
 
 		synchronized(mBaseCtx) {
-			if (bFinish && WakeTask.timeout()) {
+			if (mAutoFinish && WakeTask.timeout()) {
 				this.tStop();
 				finish();
 			} else {
@@ -97,19 +97,19 @@ public class BaseLabel extends Activity {
 	}
 
 	private void tStart() {
-		bRun = true;
-		if (bThread == null) {
+		mRunning = true;
+		if (mThread == null) {
 			ProcessThread pt = new ProcessThread();
-			bThread = new Thread(pt);
-			bThread.start();
+			mThread = new Thread(pt);
+			mThread.start();
 		}
 	}
 
 	protected void tStop() {
-		bRun = false;
-		if (bThread != null) {
-			bThread.interrupt();
-			bThread = null;
+		mRunning = false;
+		if (mThread != null) {
+			mThread.interrupt();
+			mThread = null;
 		}
 		mTimerWDT = 0;
 	}
@@ -134,15 +134,15 @@ public class BaseLabel extends Activity {
 
 					if (SysTalk.Keys.size() > 0) {
 						mKeyTs = System.currentTimeMillis();
-						String s = SysTalk.Keys.poll();
-						if (s != null) {
+						String key = SysTalk.Keys.poll();
+						if (key != null) {
 							synchronized(mBaseCtx) {
-								onKey(s);
+								onKey(key);
 							}
 						}
 					}
 
-					if (bFinish && WakeTask.timeout()) {
+					if (mAutoFinish && WakeTask.timeout()) {
 						tStop();
 						if (!isFinishing())
 							finish();

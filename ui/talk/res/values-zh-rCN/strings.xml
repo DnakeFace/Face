@@ -34,5 +34,8 @@
     <string name="face_normal_black">"状    态：黑名单"</string>
     <string name="face_normal_capture">"抓拍%d"</string>
     <string name="face_normal_prompt">"请正对摄像头人脸识别"</string>
-    <string name="face_osd_lived">"正在图片检测"</string>
+    <string name="face_normal_thermal">"请把人脸对准方框"</string>
+    <string name="face_osd_lived">"正在人脸识别"</string>
+    <string name="face_osd_thermal">"体温: "</string>
+    <string name="face_osd_mask_err">"无口罩"</string>
 </resources>

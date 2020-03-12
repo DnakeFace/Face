@@ -26,7 +26,7 @@ public final class SysProtocol {
 	public static String mHost = "";
 	public static String mHost2 = "";
 	public static String mCode = "";
-	public static int mProtocol = 0; // 1:阡信德 2:乐视 3:东方网力 4:上海特斯联
+	public static int mProtocol = 0;
 
 	public static class FaceGlobal { // 全景抓拍
 		public byte[] jpeg;
@@ -48,6 +48,8 @@ public final class SysProtocol {
 		public String identity; // 身份证号码
 		public boolean black;
 		public FaceGlobal global;
+
+		public int mask; //口罩
 
 		public int from; //0: 本地  1:CMS 2:微信
 		public int type;

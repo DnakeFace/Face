@@ -41,12 +41,10 @@ public class devent {
 	public static void event(String url, String xml) {
 		Boolean err = true;
 		if (boot && elist != null) {
-			devent e;
-
 			Iterator<devent> it = elist.iterator();
 			while (it.hasNext()) {
-				e = it.next();
-				if (url.equals(e.url)) {
+				devent e = it.next();
+				if (e != null && url.equals(e.url)) {
 					e.process(xml);
 					err = false;
 					break;
@@ -566,8 +564,12 @@ public class devent {
 			@Override
 			public void process(String body) {
 				dmsg.ack(200, null);
-				FaceLabel.mStartVo = true;
+
+				dxml p = new dxml(body);
+				SysTalk.mCameraWidth = p.getInt("/params/width", 1280);
+				SysTalk.mCameraHeight = p.getInt("/params/height", 720);
 				SysTalk.mBootEnd = true;
+				FaceLabel.mStartVo = true;
 			}
 		};
 		elist.add(de);
@@ -593,25 +595,39 @@ public class devent {
 				dmsg.ack(200, null);
 
 				dxml p = new dxml(body);
-				FaceNormal.mFaceUid = p.getInt("/params/id", -1);
-				FaceNormal.mFaceSim = p.getInt("/params/sim", -1);
-				FaceNormal.mFaceBlack = p.getInt("/params/black", 0); // 0:正常 1:黑名单
-				FaceNormal.mFaceUrl = p.getText("/params/url");
-				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
-				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
+				SysProtocol.FaceData d = new SysProtocol.FaceData();
+
+				d.from = 0;
+				d.id = p.getInt("/params/id", 0);
+				d.sim = p.getInt("/params/sim", 0);
+				d.ts = p.getInt("/params/ts", 0);
+				d.black = p.getInt("/params/black", 0) == 0 ? false : true;
+				d.mask = p.getInt("/params/mask", -1);
+				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+
+				dxml p2 = new dxml();
+				if (d.black) {
+					p2.load("/dnake/data/black/" + d.id + ".xml");
+				} else {
+					p2.load("/dnake/data/user/" + d.id + ".xml");
+				}
+				d.name = p2.getText("/sys/name");
+				d.identity = p2.getText("/sys/identity");
+
+				SysProtocol.FaceGlobal fg = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
-				FaceNormal.mFaceGlobal.jpeg = utils.readFile(jpeg);
-				FaceNormal.mFaceGlobal.width = p.getInt("/params/global/w", 0);
-				FaceNormal.mFaceGlobal.height = p.getInt("/params/global/h", 0);
-				FaceNormal.mFaceGlobal.f_x = p.getInt("/params/face/x", 0);
-				FaceNormal.mFaceGlobal.f_y = p.getInt("/params/face/y", 0);
-				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
-				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
+				fg.jpeg = utils.readFile(jpeg);
+				fg.width = p.getInt("/params/global/w", 0);
+				fg.height = p.getInt("/params/global/h", 0);
+				fg.f_x = p.getInt("/params/face/x", 0);
+				fg.f_y = p.getInt("/params/face/y", 0);
+				fg.f_w = p.getInt("/params/face/w", 0);
+				fg.f_h = p.getInt("/params/face/h", 0);
+				d.global = fg;
 
-				FaceNormal.mFaceCms = false;
-				FaceNormal.mFaceWx = false;
-				FaceNormal.mFaceHave = true;
+				FaceNormal.mResult.offer(d);
+				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
 			}
 		};
 		elist.add(de);
@@ -622,24 +638,36 @@ public class devent {
 				dmsg.ack(200, null);
 
 				dxml p = new dxml(body);
-				FaceNormal.mFaceUid = p.getInt("/params/id", 0);
-				FaceNormal.mFaceSim = p.getInt("/params/data", 0);
-				FaceNormal.mFaceUrl = p.getText("/params/url");
-				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
-				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
+				SysProtocol.FaceData d = new SysProtocol.FaceData();
+
+				d.from = 1;
+				d.id = p.getInt("/params/id", 0);
+
+				d.name = SysProtocol.displayName(d.id);
+				if (d.name == null)
+					d.name = String.valueOf(d.id);
+
+				d.sim = p.getInt("/params/data", 0);
+				d.ts = p.getInt("/params/ts", 0);
+				d.mask = p.getInt("/params/mask", -1);
+				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+				d.identity = "";
+				d.black = false;
+
+				SysProtocol.FaceGlobal fg = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
-				FaceNormal.mFaceGlobal.jpeg = utils.readFile(jpeg);
-				FaceNormal.mFaceGlobal.width = p.getInt("/params/global/w", 0);
-				FaceNormal.mFaceGlobal.height = p.getInt("/params/global/h", 0);
-				FaceNormal.mFaceGlobal.f_x = p.getInt("/params/face/x", 0);
-				FaceNormal.mFaceGlobal.f_y = p.getInt("/params/face/y", 0);
-				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
-				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
+				fg.jpeg = utils.readFile(jpeg);
+				fg.width = p.getInt("/params/global/w", 0);
+				fg.height = p.getInt("/params/global/h", 0);
+				fg.f_x = p.getInt("/params/face/x", 0);
+				fg.f_y = p.getInt("/params/face/y", 0);
+				fg.f_w = p.getInt("/params/face/w", 0);
+				fg.f_h = p.getInt("/params/face/h", 0);
+				d.global = fg;
 
-				FaceNormal.mFaceCms = true;
-				FaceNormal.mFaceWx = false;
-				FaceNormal.mFaceHave = true;
+				FaceNormal.mResult.offer(d);
+				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
 			}
 		};
 		elist.add(de);
@@ -650,25 +678,32 @@ public class devent {
 				dmsg.ack(200, null);
 
 				dxml p = new dxml(body);
-				FaceNormal.mFaceUid = p.getInt("/params/id", 0);
-				FaceNormal.mFaceSim = p.getInt("/params/data", 0);
-				FaceNormal.mFaceUrl = p.getText("/params/url");
-				FaceNormal.mFaceName = p.getText("/params/name");
-				FaceNormal.mFaceTs = p.getInt("/params/ts", 0);
 
-				FaceNormal.mFaceGlobal = new SysProtocol.FaceGlobal();
+				SysProtocol.FaceData d = new SysProtocol.FaceData();
+
+				d.from = 2;
+				d.id = p.getInt("/params/id", 0);
+				d.name = p.getText("/params/name");
+				d.sim = p.getInt("/params/data", 0);
+				d.ts = p.getInt("/params/ts", 0);
+				d.mask = p.getInt("/params/mask", -1);
+				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+				d.identity = "";
+				d.black = false;
+
+				SysProtocol.FaceGlobal fg = new SysProtocol.FaceGlobal();
 				String jpeg = p.getText("/params/global/url");
-				FaceNormal.mFaceGlobal.jpeg = utils.readFile(jpeg);
-				FaceNormal.mFaceGlobal.width = p.getInt("/params/global/w", 0);
-				FaceNormal.mFaceGlobal.height = p.getInt("/params/global/h", 0);
-				FaceNormal.mFaceGlobal.f_x = p.getInt("/params/face/x", 0);
-				FaceNormal.mFaceGlobal.f_y = p.getInt("/params/face/y", 0);
-				FaceNormal.mFaceGlobal.f_w = p.getInt("/params/face/w", 0);
-				FaceNormal.mFaceGlobal.f_h = p.getInt("/params/face/h", 0);
+				fg.jpeg = utils.readFile(jpeg);
+				fg.width = p.getInt("/params/global/w", 0);
+				fg.height = p.getInt("/params/global/h", 0);
+				fg.f_x = p.getInt("/params/face/x", 0);
+				fg.f_y = p.getInt("/params/face/y", 0);
+				fg.f_w = p.getInt("/params/face/w", 0);
+				fg.f_h = p.getInt("/params/face/h", 0);
+				d.global = fg;
 
-				FaceNormal.mFaceCms = false;
-				FaceNormal.mFaceWx = true;
-				FaceNormal.mFaceHave = true;
+				FaceNormal.mResult.offer(d);
+				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
 			}
 		};
 		elist.add(de);
@@ -689,6 +724,7 @@ public class devent {
 					d.identity = "";
 					d.black = false;
 					d.channel = p.getInt("/params/channel", 0);
+					d.mask = p.getInt("/params/mask", -1);
 					d.ts = p.getInt("/params/ts", 0);
 
 					String jpeg = p.getText("/params/global/url");
@@ -702,6 +738,8 @@ public class devent {
 					d.global.f_h = p.getInt("/params/face/h", 0);
 					SysProtocol.face(d);
 					FaceNormal.onFaceCapture(d);
+
+					FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
 				}
 			}
 		};

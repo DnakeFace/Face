@@ -29,10 +29,10 @@ import com.dnake.v700.utils;
 @SuppressLint("NewApi") public class YmsProtocol {
 	public static int m_enabled = 0;
 
-	public static String m_url = "http://59.110.168.146:9000/yms";
+	public static String m_url = "http://127.0.0.1:9000/yms";
 	public static String m_app_id = "100071";
-	public static String m_app_key = "yQFBfe";
-	public static String m_app_secret = "ZzAVri2MR3yi";
+	public static String m_app_key = "key";
+	public static String m_app_secret = "secret";
 	public static String m_app_phone = "dstest";
 	public static String m_app_token = null;
 	public static long m_token_ts = 0;

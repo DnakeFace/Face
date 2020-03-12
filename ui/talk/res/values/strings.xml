@@ -36,5 +36,8 @@
     <string name="face_normal_black">"Status:   Black"</string>
     <string name="face_normal_capture">"C%d"</string>
     <string name="face_normal_prompt">"Please look at the camera."</string>
-    <string name="face_osd_lived">"Spoofing detect..."</string>
+    <string name="face_normal_thermal">"Please aim at the face box."</string>
+    <string name="face_osd_lived">"Spoofing detecting"</string>
+    <string name="face_osd_thermal">"Temperature: "</string>
+    <string name="face_osd_mask_err">"Not Mask"</string>
 </resources>

@@ -106,11 +106,7 @@ public class TalkLabel extends BaseLabel {
 	public void onTimer() {
 		super.onTimer();
 
-		if (this.isFinishing())
-			return;
-
 		WakeTask.acquire();
-
 		if (this.getWindow().getDecorView().getSystemUiVisibility() != View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) {
 			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		}
@@ -185,10 +181,12 @@ public class TalkLabel extends BaseLabel {
 	@Override
 	public void onKey(String key) {
 		super.onKey(key);
+
 		if (key.charAt(0) == '*' || key.charAt(0) == 'X') {
-			this.stop(true);
-			if (!this.isFinishing())
+			if (!this.isFinishing()) {
 				this.finish();
+				this.stop(true);
+			}
 		}
 	}
 
@@ -208,7 +206,7 @@ public class TalkLabel extends BaseLabel {
 		sCaller.logger(sCaller.logger.ANSWER);
 	}
 
-	public void stop(Boolean m) {
+	public void stop(Boolean mode) {
 		if (mMode == OUT) {
 			if (sCaller.running == sCaller.RINGING)
 				sCaller.logger(sCaller.logger.FAILED);
@@ -220,14 +218,15 @@ public class TalkLabel extends BaseLabel {
 		req.to("/talk/stop", null);
 		sCaller.reset();
 
-		if (m) {
+		if (mode) {
 			if (mPlayer != null) {
 				Sound.stop(mPlayer);
 				mPlayer = null;
 			}
 			mEndTs = System.currentTimeMillis();
-		} else
+		} else {
 			mEndTs = 0;
+		}
 	}
 
 	public static void start(int b, int u, int r) {

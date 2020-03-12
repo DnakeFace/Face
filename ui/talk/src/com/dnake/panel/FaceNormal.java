@@ -1,15 +1,17 @@
 package com.dnake.panel;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.dnake.misc.Sound;
 import com.dnake.misc.SysTalk;
 import com.dnake.panel.R;
 import com.dnake.special.SysProtocol;
-import com.dnake.special.SysProtocol.FaceData;
-import com.dnake.v700.dxml;
 import com.dnake.v700.sys;
 import com.dnake.v700.utils;
 
-import android.graphics.BitmapFactory;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+@SuppressLint("DefaultLocale")
 public class FaceNormal {
 	public static LinearLayout mLeftData = null;
 	public static LinearLayout mRightData = null;
@@ -28,20 +31,19 @@ public class FaceNormal {
 	public static TextView mResultStatus;
 	public static ImageView mResultBmp;
 
-	public static FaceData mFaceData[] = new FaceData[4];
+	public static TextView mFacePrompt = null;
+
+	public static RelativeLayout mFaceCross1080p = null;
+	public static RelativeLayout mFaceCross720p = null;
+	public static TextView mFaceThermal = null;
+
+	public static SysProtocol.FaceData mFaceData[] = new SysProtocol.FaceData[4];
 	public static ImageView mOsdFace[] = new ImageView[4];
 	public static TextView mOsdText[] = new TextView[4];
 
-	public static boolean mFaceHave = false;
-	public static int mFaceUid = -1;
-	public static int mFaceSim;
-	public static int mFaceBlack = 0;
-	public static String mFaceName;
-	public static String mFaceUrl;
-	public static boolean mFaceCms = false;
-	public static boolean mFaceWx = false;
-	public static long mFaceTs;
-	public static SysProtocol.FaceGlobal mFaceGlobal;
+	public static Queue<SysProtocol.FaceData> mResult = new LinkedList<SysProtocol.FaceData>();
+
+	private static int mThermalMode = -1;
 
 	public static void onStart() {
 		if (sys.lcd() != 0) {
@@ -57,6 +59,7 @@ public class FaceNormal {
 			}
 		}
 		mResultLayout.setVisibility(View.INVISIBLE);
+
 		onResultDisplay();
 		onCaptureDisplay();
 	}
@@ -66,6 +69,7 @@ public class FaceNormal {
 	private static String mOsdWhite = "";
 	private static String mOsdBlack = "";
 	private static String mOsdCapture = "";
+	private static String mOsdMaskErr = "";
 
 	public static void onOsdStart(RelativeLayout layout) {
 		mOsdName = SysTalk.mContext.getString(R.string.face_normal_name);
@@ -73,6 +77,7 @@ public class FaceNormal {
 		mOsdWhite = SysTalk.mContext.getString(R.string.face_normal_white);
 		mOsdBlack = SysTalk.mContext.getString(R.string.face_normal_black);
 		mOsdCapture = SysTalk.mContext.getString(R.string.face_normal_capture);
+		mOsdMaskErr = SysTalk.mContext.getString(R.string.face_osd_mask_err);
 
 		mLeftData = (LinearLayout) layout.findViewById(R.id.osd_face_data);
 		mRightData = (LinearLayout) layout.findViewById(R.id.osd_face_capture);
@@ -103,6 +108,12 @@ public class FaceNormal {
 		mResultSim = (TextView) layout.findViewById(R.id.osd_face_result_sim);
 		mResultStatus = (TextView) layout.findViewById(R.id.osd_face_result_status);
 
+		mFacePrompt = (TextView) layout.findViewById(R.id.osd_face_prompt);
+
+		mFaceCross1080p = (RelativeLayout) layout.findViewById(R.id.osd_face_cross_1080);
+		mFaceCross720p = (RelativeLayout) layout.findViewById(R.id.osd_face_cross_720);
+		mFaceThermal = (TextView) layout.findViewById(R.id.osd_face_thermal);
+
 		if (sys.lcd() != 0 && sys.sdt() == 0) {
 			RelativeLayout r = (RelativeLayout) layout.findViewById(R.id.osd_face_tips);
 			if (r != null) {
@@ -115,55 +126,16 @@ public class FaceNormal {
 		}
 	}
 
-	private static long mWaitTs = 0;
+	private static long mResultWaitTs = 0;
 
 	public static void onTimer() {
 		if (mResultLayout == null)
 			return;
 
-		if (mFaceHave) {
-			String name = "";
-			String identity = "";
-			boolean black = false;
-
-			SysProtocol.FaceData d = new SysProtocol.FaceData();
-			if (mFaceCms) {
-				name = SysProtocol.displayName(mFaceUid);
-				if (name == null)
-					name = String.valueOf(mFaceUid);
-				d.from = 1;
-			} else if (mFaceWx) {
-				name = mFaceName;
-				d.from = 2;
-			} else {
-				dxml p = new dxml();
-				if (mFaceBlack != 0) {
-					p.load("/dnake/data/black/" + mFaceUid + ".xml");
-					black = true;
-				} else {
-					p.load("/dnake/data/user/" + mFaceUid + ".xml");
-				}
-				name = p.getText("/sys/name");
-				identity = p.getText("/sys/identity");
-				d.from = 0;
-			}
-
-			d.id = mFaceUid;
-			d.name = name;
-			d.bmp = BitmapFactory.decodeFile(mFaceUrl);
-			d.sim = mFaceSim;
-			d.identity = identity;
-			d.black = black;
-			d.global = mFaceGlobal;
-			d.ts = mFaceTs;
-			for (int i = 0; i < (mFaceData.length - 1); i++) {
-				mFaceData[i] = mFaceData[i + 1];
-			}
-			mFaceData[mFaceData.length - 1] = d;
-
-			mResultName.setText(mOsdName + name);
-			mResultSim.setText(mOsdSimilarity + mFaceSim);
-			if (black) {
+		ThermalData thermal = mThermal.poll();
+		SysProtocol.FaceData d = mResult.poll();
+		if (d != null) {
+			if (d.black) {
 				mResultStatus.setText(mOsdBlack);
 				mResultName.setTextColor(0xFFFF0000);
 				mResultSim.setTextColor(0xFFFF0000);
@@ -173,27 +145,90 @@ public class FaceNormal {
 				mResultName.setTextColor(0xFF000000);
 				mResultSim.setTextColor(0xFF000000);
 				mResultStatus.setTextColor(0xFF000000);
-				Sound.play(Sound.OrderFaceOK);
+				if (thermal == null) {
+					if (d.mask == -1 || d.mask == 1) {
+						Sound.play(Sound.OrderFaceOK);
+					} else {
+						mFaceMaskTs = System.currentTimeMillis();
+						Sound.play(Sound.OrderFaceMaskErr);
+					}
+				}
 			}
+			mResultName.setText(mOsdName + d.name);
+			mResultSim.setText(mOsdSimilarity + d.sim);
 			mResultBmp.setImageBitmap(d.bmp);
 			mResultLayout.setVisibility(View.VISIBLE);
-			mWaitTs = System.currentTimeMillis();
+
+			for (int i = 0; i < (mFaceData.length - 1); i++) {
+				mFaceData[i] = mFaceData[i + 1];
+			}
+			mFaceData[mFaceData.length - 1] = d;
 
 			onResultDisplay();
 			onLedGreen();
-
 			SysProtocol.face(d);
 
-			mFaceHave = false;
+			mResultWaitTs = System.currentTimeMillis();
 		}
+
 		if (mCaptureHave) {
 			onCaptureDisplay();
 			mCaptureHave = false;
 		}
 
-		if (mWaitTs != 0 && Math.abs(System.currentTimeMillis() - mWaitTs) > 5 * 1000) {
-			mWaitTs = 0;
+		if (mResultWaitTs != 0 && Math.abs(System.currentTimeMillis() - mResultWaitTs) > 5 * 1000) {
+			mResultWaitTs = 0;
 			mResultLayout.setVisibility(View.INVISIBLE);
+		}
+
+		if (mThermalMode != sys.thermal()) {
+			mThermalMode = sys.thermal();
+			if (mThermalMode == 1) {
+				if (SysTalk.mCameraHeight == 1080) {
+					if (mFaceCross1080p != null)
+						mFaceCross1080p.setVisibility(View.VISIBLE);
+				} else {
+					if (mFaceCross720p != null)
+						mFaceCross720p.setVisibility(View.VISIBLE);
+				}
+				if (mFacePrompt != null)
+					mFacePrompt.setText(R.string.face_normal_thermal);
+			}
+		}
+
+		if (thermal != null && mThermalWaitTs == 0) {
+			if (mFaceThermal != null) {
+				String mask = "";
+				if (thermal.mValue+0.049 > thermal.mThreshold) {
+					mFaceThermal.setTextColor(Color.rgb(255, 0, 0));
+					Sound.play(Sound.thermal_alarm, false);
+				} else {
+					mFaceThermal.setTextColor(Color.rgb(0, 0, 255));
+					if (thermal.mData != null) {
+						if (thermal.mData.mask == 0) {
+							mFaceMaskTs = System.currentTimeMillis();
+							Sound.play(Sound.OrderFaceMaskErr);
+							mFaceMaskTs = System.currentTimeMillis();
+							mask = mOsdMaskErr;
+							mFaceThermal.setTextColor(Color.rgb(255, 0, 0));
+						} else {
+							Sound.play(Sound.OrderThermalOK);
+						}
+					} else {
+						Sound.play(Sound.OrderThermalOK);
+					}
+				}
+				String s = SysTalk.mContext.getString(R.string.face_osd_thermal) + String.format("%.1f ℃", thermal.mValue);
+				if (mask.length() > 0)
+					s += " " + mask;
+				mFaceThermal.setText(s);
+			}
+			mThermalWaitTs = System.currentTimeMillis();
+		} else if (mThermalWaitTs != 0 && sys.ts(mThermalWaitTs) > 3000) {
+			mThermalWaitTs = 0;
+			if (mFaceThermal != null) {
+				mFaceThermal.setText("");
+			}
 		}
 	}
 
@@ -206,10 +241,14 @@ public class FaceNormal {
 			if (mFaceData[i] != null) {
 				int n = (mOsdFace.length - 1) - i;
 				mOsdFace[n].setImageBitmap(mFaceData[i].bmp);
+				if (mFaceData[i].black) {
+					mOsdText[n].setTextColor(0xFFFF0000);
+				} else {
+					mOsdText[n].setTextColor(0xFFFFFFFF);
+				}
 				if (mFaceData[i].name != null) {
 					String s = "";
-					if (mFaceData[i].name.getBytes().length == mFaceData[i].name
-							.length()) { // 全部是ASCII字符
+					if (mFaceData[i].name.getBytes().length == mFaceData[i].name.length()) { // 全部是ASCII字符
 						s = mFaceData[i].name;
 					} else {
 						s = mFaceData[i].name.substring(0, 1);
@@ -217,26 +256,37 @@ public class FaceNormal {
 							s += "X";
 						}
 					}
-					mOsdText[n].setText(s + " - " + mFaceData[i].sim);
+					if (mFaceData[i].mask != -1) {
+						if (mFaceData[i].mask == 0) {
+							mOsdText[n].setText(s + " - " + mFaceData[i].sim + " - " + mOsdMaskErr);
+							mOsdText[n].setTextColor(0xFF0000FF);
+						} else {
+							mOsdText[n].setText(s + " - " + mFaceData[i].sim);
+						}
+					} else {
+						mOsdText[n].setText(s + " - " + mFaceData[i].sim);
+					}
 				}
-				if (mFaceData[i].black)
-					mOsdText[n].setTextColor(0xFFFF0000);
-				else
-					mOsdText[n].setTextColor(0xFFFFFFFF);
 			}
 		}
 	}
 
 	public static boolean mCaptureHave = false;
-	public static FaceData mCaptureData[] = new FaceData[4];
+	public static SysProtocol.FaceData mCaptureData[] = new SysProtocol.FaceData[4];
 	public static ImageView mCaptureFace[] = new ImageView[4];
 	public static TextView mCaptureText[] = new TextView[4];
 	public static int mCaptureCount = 0;
+	public static long mFaceMaskTs = 0;
 
-	public static void onFaceCapture(FaceData d) {
+	public static void onFaceCapture(SysProtocol.FaceData d) {
 		if (mCaptureCount > 10000)
 			mCaptureCount = 0;
 		mCaptureCount++;
+
+		if (d.mask == 0 && sys.ts(mFaceMaskTs) > 3000) { //没戴口罩
+			mFaceMaskTs = System.currentTimeMillis();
+			Sound.play(Sound.OrderFaceMaskErr);
+		}
 
 		for (int i = 0; i < (mCaptureData.length - 1); i++) {
 			mCaptureData[i] = mCaptureData[i + 1];
@@ -252,7 +302,17 @@ public class FaceNormal {
 			if (mCaptureData[i] != null) {
 				int n = (mCaptureData.length - 1) - i;
 				mCaptureFace[n].setImageBitmap(mCaptureData[i].bmp);
-				mCaptureText[n].setText(mCaptureData[i].name);
+				mCaptureText[n].setTextColor(0xFFFFFFFF);
+				if (mCaptureData[i].mask != -1) {
+					if (mCaptureData[i].mask == 0) {
+						mCaptureText[n].setText(mOsdMaskErr);
+						mCaptureText[n].setTextColor(0xFF0000FF);
+					} else {
+						mCaptureText[n].setText(mCaptureData[i].name);
+					}
+				} else {
+					mCaptureText[n].setText(mCaptureData[i].name);
+				}
 			} else {
 				mCaptureFace[i].setImageBitmap(null);
 				mCaptureText[i].setText("");
@@ -270,5 +330,23 @@ public class FaceNormal {
 			}
 		};
 		e.sendEmptyMessageDelayed(0, 3 * 1000);
+	}
+
+	public static class ThermalData {
+		public float mValue;
+		public float mThreshold;
+		SysProtocol.FaceData mData;
+	}
+	public static Queue<ThermalData> mThermal = new LinkedList<ThermalData>();
+	public static long mThermalWaitTs = 0;
+
+	public static void onThermal(float value, float threshold, SysProtocol.FaceData fd) {
+		if (value > 30) {
+			ThermalData d = new ThermalData();
+			d.mValue = value;
+			d.mThreshold = threshold;
+			d.mData = fd;
+			mThermal.offer(d);
+		}
 	}
 }

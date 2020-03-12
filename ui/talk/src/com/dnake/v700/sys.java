@@ -1,5 +1,6 @@
 package com.dnake.v700;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public final class sys {
 	public static int version_minor = 4; // 次版本
 	public static int version_minor2 = 1; // 次版本2
 
-	public static String version_date = "20190905"; // 日期
+	public static String version_date = "20200109"; // 日期
 
 	public static String version_ex = "(std)"; // 扩展标注
 
@@ -418,5 +419,10 @@ public final class sys {
 		} catch (IOException e) {
 		}
 		return sdt;
+	}
+
+	public static int thermal() {
+		File f = new File("/var/etc/thermal");
+		return (f.exists() ? 1 : 0);
 	}
 }
