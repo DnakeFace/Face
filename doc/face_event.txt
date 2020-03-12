@@ -13,12 +13,21 @@
 
 5、/ui/face/result
    本地WEB管理人脸识别结果。
+   p.getInt("/params/mask", -1); //是否戴口罩，-1: 未启用口罩检测 0:无口罩 1:有口罩
+   p.getFloat("/params/thermal/temp", 0); //额温，无额温硬件时温度值固定为0
+   p.getFloat("/params/thermal/threshold", 0); //额温报警阈值
 
 6、/ui/cms/result
    使用700管理软件或face_manage.txt扩展接口添加的人脸识别结果触发此接口。
+   p.getInt("/params/mask", -1); //是否戴口罩，-1: 未启用口罩检测 0:无口罩 1:有口罩
+   p.getFloat("/params/thermal/temp", 0); //额温，无额温硬件时温度值固定为0
+   p.getFloat("/params/thermal/threshold", 0); //额温报警阈值
 
 7、/ui/face/capture
    人脸抓拍接口，非识别人脸触发此接口事件。
+   p.getInt("/params/mask", -1); //是否戴口罩，-1: 未启用口罩检测 0:无口罩 1:有口罩
+   p.getFloat("/params/thermal/temp", 0); //额温，无额温硬件时温度值固定为0
+   p.getFloat("/params/thermal/threshold", 0); //额温报警阈值
 
 8、/ui/face/jpeg
    人脸图片添加结果通知接口
