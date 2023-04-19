@@ -6,6 +6,7 @@ import com.dnake.widget.Button2;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,8 +22,9 @@ public class MainActivity extends BaseLabel {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		if (sys.lcd() != 0 && this.getRequestedOrientation() == 0) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		Button2 b = (Button2) this.findViewById(R.id.main_apps);
@@ -44,12 +46,22 @@ public class MainActivity extends BaseLabel {
 
 		it = new Intent(this, SysService.class);
 		this.startService(it);
+
+		if (sys.lcd.orientation() != this.getRequestedOrientation()) {
+			if (sys.lcd.orientation() == 0)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			else if (sys.lcd.orientation() == 1)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			else if (sys.lcd.orientation() == 2)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+			else if (sys.lcd.orientation() == 3)
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		bFinish = false;
 		tPeriod = 1000;
 	}
@@ -60,14 +72,21 @@ public class MainActivity extends BaseLabel {
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		this.finish();
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 	}
 
 	@Override
 	public void onTimer() {
-		if (this.getWindow().getDecorView().getSystemUiVisibility() != View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) {
-			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		if (mSdtUsed == 0 && SysSpecial.third == 0 && sys.sdt() > 0) {

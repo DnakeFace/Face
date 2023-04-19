@@ -63,10 +63,21 @@ public class sys {
 		return sdt;
 	}
 
-	// 0:横屏 1:竖屏
-	public static int lcd() {
-		dxml p = new dxml();
-		p.load("/system/etc/special.xml");
-		return p.getInt("/sys/lcd", 0);
+	public static class lcd {
+		public static int portrait = -1;
+
+		// 0:横屏 1:竖屏
+		public static int orientation() {
+			if (lcd.portrait < 0) {
+				dxml sp = new dxml();
+				sp.load("/system/etc/special.xml");
+				lcd.portrait = sp.getInt("/sys/lcd", 0);
+
+				dxml p = new dxml();
+				p.load("/dnake/cfg/sys.xml");
+				lcd.portrait = p.getInt("/sys/lcd/portrait", lcd.portrait);
+			}
+			return lcd.portrait;
+		}
 	}
 }

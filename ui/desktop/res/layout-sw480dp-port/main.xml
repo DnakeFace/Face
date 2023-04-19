@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_bkg"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/main_port_bkg" >
+
+    <com.dnake.widget.Button2
+        android:id="@+id/main_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/main_btn_apps"
+        android:gravity="bottom|center"
+        android:textColor="#808080"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/main_sdt_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/main_sdt_police"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/police" />
+
+        <TextView
+            android:id="@+id/main_sdt_prompt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_sdt_police"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:text="欢迎使用人证通"
+            android:textSize="42sp" />
+
+        <TextView
+            android:id="@+id/main_sdt_prompt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_sdt_prompt1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="人证合一身份核查系统"
+            android:textSize="42sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
