@@ -5,6 +5,7 @@ import com.dnake.v700.sys;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -151,5 +152,10 @@ public class BaseLabel extends Activity {
 			};
 		}
 		this.tStart();
+	}
+
+	public int orientation() {
+		WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
+		return wm.getDefaultDisplay().getRotation();
 	}
 }

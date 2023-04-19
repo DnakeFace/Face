@@ -1,6 +1,5 @@
 package com.dnake.v700;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,10 +14,10 @@ import android.content.res.Configuration;
 public final class sys {
 
 	public static int version_major = 1; // 主版本
-	public static int version_minor = 4; // 次版本
-	public static int version_minor2 = 1; // 次版本2
+	public static int version_minor = 5; // 次版本
+	public static int version_minor2 = 0; // 次版本2
 
-	public static String version_date = "20200109"; // 日期
+	public static String version_date = "20200611"; // 日期
 
 	public static String version_ex = "(std)"; // 扩展标注
 
@@ -107,6 +106,18 @@ public final class sys {
 		public static int H264 = 102;
 	}
 
+	public static class lcd {
+		public static int portrait = -1; // 0:横屏 1:竖屏
+
+		public static int orientation() {
+			return portrait;
+		}
+	}
+
+	public static class camera {
+		public static int rotation = -1; // 0:横屏 1:竖屏
+	}
+
 	public static String id() {
 		String s = null;
 		if (panel.mode == 0)
@@ -153,8 +164,12 @@ public final class sys {
 	}
 
 	public static void load() {
-		dxml p = new dxml();
+		dxml sp = new dxml();
+		sp.load("/system/etc/special.xml");
+		lcd.portrait = sp.getInt("/sys/lcd", 0);
+		camera.rotation = sp.getInt("/sys/camera", 0);
 
+		dxml p = new dxml();
 		boolean result = p.load(url);
 		if (!result)
 			result = p.load(url_b);
@@ -195,6 +210,9 @@ public final class sys {
 				feed.url[i] = p.getText("/sys/feed/url" + i);
 			}
 			payload.H264 = p.getInt("/sys/payload/h264", 102);
+
+			lcd.portrait = p.getInt("/sys/lcd/portrait", lcd.portrait);
+			camera.rotation = p.getInt("/sys/camera/rotation", camera.rotation);
 		} else {
 			save();
 		}
@@ -246,6 +264,8 @@ public final class sys {
 			}
 		}
 		p.setInt("/sys/payload/h264", payload.H264);
+		p.setInt("/sys/lcd/portrait", lcd.portrait);
+		p.setInt("/sys/camera/rotation", camera.rotation);
 
 		p.save(url);
 		p.save(url_b);
@@ -318,17 +338,6 @@ public final class sys {
 		}
 		sLimit = limit;
 		return limit;
-	}
-
-	// 0:横屏 1:竖屏
-	private static int mLcd = -1;
-	public static int lcd() {
-		if (mLcd == -1) {
-			dxml p = new dxml();
-			p.load("/system/etc/special.xml");
-			mLcd = p.getInt("/sys/lcd", 0);
-		}
-		return mLcd;
 	}
 
 	public static int lan_carrier() {
@@ -419,10 +428,5 @@ public final class sys {
 		} catch (IOException e) {
 		}
 		return sdt;
-	}
-
-	public static int thermal() {
-		File f = new File("/var/etc/thermal");
-		return (f.exists() ? 1 : 0);
 	}
 }

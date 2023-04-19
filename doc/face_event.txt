@@ -34,3 +34,12 @@
 
 9、/ui/v170/qr
    二维码识别结果通知接口
+
+10、/ui/object/detect
+   结构化分析结果
+
+11、/ui/plate/result
+   车牌识别结果
+
+12、/ui/fire/result
+   烟雾检测结果

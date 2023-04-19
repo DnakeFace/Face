@@ -43,6 +43,10 @@ public class TalkLabel extends BaseLabel {
 		setContentView(R.layout.talk);
 
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+		}
 
 		mContext = this;
 		mPeriod = 300;
@@ -59,7 +63,6 @@ public class TalkLabel extends BaseLabel {
 	@Override
 	public void onStart() {
 		super.onStart();
-		this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		mContext = this;
 		this.onStart2();
 	}
@@ -107,8 +110,10 @@ public class TalkLabel extends BaseLabel {
 		super.onTimer();
 
 		WakeTask.acquire();
-		if (this.getWindow().getDecorView().getSystemUiVisibility() != View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) {
-			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		if (mMode == OUT) {// 呼叫

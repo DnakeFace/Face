@@ -7,7 +7,6 @@ import java.util.List;
 
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 
 import com.dnake.misc.SysAccess;
 import com.dnake.misc.SysCard;
@@ -20,7 +19,6 @@ import com.dnake.panel.FaceLabel;
 import com.dnake.panel.FaceNormal;
 import com.dnake.panel.TalkLabel;
 import com.dnake.panel.WakeTask;
-import com.dnake.special.NetposaHttpd;
 import com.dnake.special.SysProtocol;
 import com.dnake.special.SysSpecial;
 import com.dnake.special.YmsProtocol;
@@ -493,10 +491,11 @@ public class devent {
 				d.unit = p.getInt("/params/unit", 0);
 				d.floor = p.getInt("/params/floor", 0);
 				d.family = p.getInt("/params/family", 0);
-				if (p.getInt("/params/add", 1) == 1)
+				if (p.getInt("/params/add", 1) == 1) {
 					SysCard.add(d);
-				else
+				} else {
 					SysCard.rm(d.card);
+				}
 			}
 		};
 		elist.add(de);
@@ -517,8 +516,9 @@ public class devent {
 						d.floor = p.getInt("/params/c"+i+"/f", 0);
 						d.family = p.getInt("/params/c"+i+"/r", 0);
 						SysCard.add(d);
-					} else
+					} else {
 						SysCard.rm(d.card);
+					}
 				}
 			}
 		};
@@ -589,7 +589,7 @@ public class devent {
 		};
 		elist.add(de);
 
-		de = new devent("/ui/face/result") {
+		de = new devent("/ui/face/result") { //本地人脸库识别结果
 			@Override
 			public void process(String body) {
 				dmsg.ack(200, null);
@@ -604,7 +604,8 @@ public class devent {
 				d.ts = p.getInt("/params/ts", 0);
 				d.black = p.getInt("/params/black", 0) == 0 ? false : true;
 				d.mask = p.getInt("/params/mask", -1);
-				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+				d.bmp = null;
+				d.data = utils.readFile(p.getText("/params/url"));
 
 				dxml p2 = new dxml();
 				if (d.black) {
@@ -626,8 +627,9 @@ public class devent {
 				fg.f_h = p.getInt("/params/face/h", 0);
 				d.global = fg;
 
-				FaceNormal.mResult.offer(d);
-				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
+				synchronized(FaceNormal.mResult) {
+					FaceNormal.mResult.offer(d);
+				}
 			}
 		};
 		elist.add(de);
@@ -645,13 +647,15 @@ public class devent {
 				d.id = p.getInt("/params/id", 0);
 
 				d.name = SysProtocol.displayName(d.id);
-				if (d.name == null)
+				if (d.name == null) {
 					d.name = String.valueOf(d.id);
+				}
 
 				d.sim = p.getInt("/params/data", 0);
 				d.ts = p.getInt("/params/ts", 0);
 				d.mask = p.getInt("/params/mask", -1);
-				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+				d.bmp = null;
+				d.data = utils.readFile(p.getText("/params/url"));
 				d.identity = "";
 				d.black = false;
 
@@ -666,8 +670,9 @@ public class devent {
 				fg.f_h = p.getInt("/params/face/h", 0);
 				d.global = fg;
 
-				FaceNormal.mResult.offer(d);
-				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
+				synchronized(FaceNormal.mResult) {
+					FaceNormal.mResult.offer(d);
+				}
 			}
 		};
 		elist.add(de);
@@ -687,7 +692,8 @@ public class devent {
 				d.sim = p.getInt("/params/data", 0);
 				d.ts = p.getInt("/params/ts", 0);
 				d.mask = p.getInt("/params/mask", -1);
-				d.bmp = BitmapFactory.decodeFile(p.getText("/params/url"));
+				d.bmp = null;
+				d.data = utils.readFile(p.getText("/params/url"));
 				d.identity = "";
 				d.black = false;
 
@@ -702,8 +708,9 @@ public class devent {
 				fg.f_h = p.getInt("/params/face/h", 0);
 				d.global = fg;
 
-				FaceNormal.mResult.offer(d);
-				FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
+				synchronized(FaceNormal.mResult) {
+					FaceNormal.mResult.offer(d);
+				}
 			}
 		};
 		elist.add(de);
@@ -719,7 +726,8 @@ public class devent {
 					SysProtocol.FaceData d = new SysProtocol.FaceData();
 					d.id = -1;
 					d.name = "";
-					d.bmp = BitmapFactory.decodeFile(url);
+					d.bmp = null;
+					d.data = utils.readFile(url);
 					d.sim = 0;
 					d.identity = "";
 					d.black = false;
@@ -738,8 +746,6 @@ public class devent {
 					d.global.f_h = p.getInt("/params/face/h", 0);
 					SysProtocol.face(d);
 					FaceNormal.onFaceCapture(d);
-
-					FaceNormal.onThermal(p.getFloat("/params/thermal/temp", 0), p.getFloat("/params/thermal/threshold", 0), d);
 				}
 			}
 		};
@@ -750,13 +756,11 @@ public class devent {
 			public void process(String body) {
 				dmsg.ack(200, null);
 
+				/*
 				dxml p = new dxml(body);
-				int code = p.getInt("/params/result", 0);
+				int result = p.getInt("/params/result", 0);
 				int rid = p.getInt("/params/rid", 0);
-				if (NetposaHttpd.mRid == rid) {
-					NetposaHttpd.mResultOK = true;
-					NetposaHttpd.mResultCode = code;
-				}
+				*/
 			}
 		};
 		elist.add(de);
@@ -771,6 +775,74 @@ public class devent {
 				d.mode = p.getInt("/params/mode", 0);
 				d.url = p.getText("/params/url");
 				FaceLabel.mFaceLived.offer(d);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/object/detect") { //结构化分析事件
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				SysProtocol.ObjectData d = new SysProtocol.ObjectData();
+				d.mChannel = p.getInt("/params/channel", 0);
+				int total = p.getInt("/params/total", 0);
+				for(int i=0; i<total; i++) {
+					SysProtocol.ObjectPosition obj = new SysProtocol.ObjectPosition();
+					obj.label = p.getInt("/params/d"+i+"/label", 0);
+					obj.x = p.getInt("/params/d"+i+"/x", 0);
+					obj.y = p.getInt("/params/d"+i+"/y", 0);
+					obj.w = p.getInt("/params/d"+i+"/w", 0);
+					obj.h = p.getInt("/params/d"+i+"/h", 0);
+					d.mObject.add(obj);
+				}
+				d.mData = utils.readFile(p.getText("/params/url"));
+				d.mTs = System.currentTimeMillis();
+				SysProtocol.object(d);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/plate/result") { //车牌识别
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				dxml p = new dxml(body);
+				SysProtocol.PlateResult d = new SysProtocol.PlateResult();
+				d.channel = p.getInt("/params/channel", 0);
+				d.text = p.getText("/params/result");
+				d.ts = p.getInt("/params/ts", 0);
+				d.data = utils.readFile(p.getText("/params/url"));
+				synchronized(FaceNormal.mPlateResult) {
+					FaceNormal.mPlateResult.offer(d);
+				}
+				SysProtocol.plate(d);
+			}
+		};
+		elist.add(de);
+
+		de = new devent("/ui/fire/result") { //火灾检测
+			@Override
+			public void process(String body) {
+				dmsg.ack(200, null);
+
+				/*
+				dxml p = new dxml(body);
+				int channel = p.getInt("/params/channel", 0); //视频通道
+				int ts = p.getInt("/params/ts", 0); //时间戳
+				String url = p.getText("/params/url"); //图片路径
+				int total = p.getInt("/params/total", 0);
+				for(int i=0; i<total; i++) {
+					int label = p.getInt("/params/d"+i+"/label", 0); //类型 0:火焰 1:烟雾
+					int x = p.getInt("/params/d"+i+"/x", 0);
+					int y = p.getInt("/params/d"+i+"/y", 0);
+					int w = p.getInt("/params/d"+i+"/w", 0); //宽
+					int h = p.getInt("/params/d"+i+"/h", 0); //高
+					int score = p.getInt("/params/d"+i+"/s", 0); //阈值 0-100
+				}
+				*/
 			}
 		};
 		elist.add(de);
@@ -798,10 +870,10 @@ public class devent {
 		de = new devent("/ui/web/sys/write") {
 			@Override
 			public void process(String body) {
-				dmsg.ack(200, null);
 				dxml p = new dxml(body);
 				int val = p.getInt("/params/language", sys.language());
 				sys.language(val);
+				dmsg.ack(200, null);
 			}
 		};
 		elist.add(de);
@@ -812,8 +884,8 @@ public class devent {
 				dxml p = new dxml();
 				p.setInt("/params/enable", SysProtocol.mEnable);
 				p.setText("/params/host", SysProtocol.mHost);
-				p.setText("/params/host2", SysProtocol.mHost2);
 				p.setText("/params/code", SysProtocol.mCode);
+				p.setText("/params/data", SysProtocol.mData);
 				p.setInt("/params/protocol", SysProtocol.mProtocol);
 				dmsg.ack(200, p.toString());
 			}
@@ -823,17 +895,17 @@ public class devent {
 		de = new devent("/ui/web/protocol/write") {
 			@Override
 			public void process(String body) {
-				dmsg.ack(200, null);
-
 				dxml p = new dxml(body);
 				SysProtocol.mEnable = p.getInt("/params/enable", SysProtocol.mEnable);
-				SysProtocol.mHost = p.getText("/params/host", SysProtocol.mHost);
-				SysProtocol.mHost2 = p.getText("/params/host2", SysProtocol.mHost2);
-				SysProtocol.mCode = p.getText("/params/code", SysProtocol.mCode);
+				SysProtocol.mHost = p.getText("/params/host", "");
+				SysProtocol.mCode = p.getText("/params/code", "");
+				SysProtocol.mData = p.getText("/params/data", "");
 				SysProtocol.mProtocol = p.getInt("/params/protocol", SysProtocol.mProtocol);
-				if (SysProtocol.mHost != null && !SysProtocol.mHost.startsWith("http://") && !SysProtocol.mHost.startsWith("https://"))
+				if (SysProtocol.mHost != null && !SysProtocol.mHost.startsWith("http://") && !SysProtocol.mHost.startsWith("https://")) {
 					SysProtocol.mHost = "http://"+SysProtocol.mHost;
+				}
 				SysProtocol.save();
+				dmsg.ack(200, null);
 			}
 		};
 		elist.add(de);
@@ -857,8 +929,6 @@ public class devent {
 		de = new devent("/ui/web/yms/write") {
 			@Override
 			public void process(String body) {
-				dmsg.ack(200, null);
-
 				dxml p = new dxml(body);
 				YmsProtocol.m_url = p.getText("/params/app/url", YmsProtocol.m_url);
 				YmsProtocol.m_app_id = p.getText("/params/app/id", YmsProtocol.m_app_id);
@@ -867,6 +937,7 @@ public class devent {
 				YmsProtocol.m_app_phone = p.getText("/params/app/phone", YmsProtocol.m_app_phone);
 				YmsProtocol.m_devid = p.getText("/params/devid", YmsProtocol.m_devid);
 				YmsProtocol.save();
+				dmsg.ack(200, null);
 			}
 		};
 		elist.add(de);
@@ -874,7 +945,6 @@ public class devent {
 		de = new devent("/ui/web/yms/control") {
 			@Override
 			public void process(String body) {
-				dmsg.ack(200, null);
 				dxml p = new dxml(body);
 				String cmd = p.getText("/params/cmd", "");
 				if (cmd.equals("add"))
@@ -883,6 +953,7 @@ public class devent {
 					YmsProtocol.doDelete();
 				else if (cmd.equals("sync"))
 					YmsProtocol.m_person_ts = 0;
+				dmsg.ack(200, null);
 			}
 		};
 		elist.add(de);

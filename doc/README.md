@@ -6,6 +6,4 @@
 
 3、人脸事件：face_event.txt
 
-4、算法版本说明：face_version.txt
-
-5、硬件参数说明：face_hardware.txt
+4、硬件参数说明：face_hardware.txt

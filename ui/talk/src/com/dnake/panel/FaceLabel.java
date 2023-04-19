@@ -7,11 +7,11 @@ import java.util.Queue;
 import com.dnake.v700.dmsg;
 import com.dnake.v700.dxml;
 import com.dnake.v700.sys;
+import com.dnake.v700.utils;
 import com.dnake.widget.ZXing;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -44,8 +44,9 @@ public class FaceLabel extends BaseLabel {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.face);
 
-		if (sys.lcd() != 0 && this.getRequestedOrientation() == 0) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		onOsdStart();
@@ -70,8 +71,9 @@ public class FaceLabel extends BaseLabel {
 			tv.setText(s);
 		}
 
-		if (this.getWindow().getDecorView().getSystemUiVisibility() != View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) {
-			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+		int ui_visibility = this.getWindow().getDecorView().getSystemUiVisibility();
+		if ((ui_visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+			this.getWindow().getDecorView().setSystemUiVisibility(ui_visibility | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		}
 
 		if (mOsdWidth != mOsdLayout.getWidth() || mOsdHeight != mOsdLayout.getHeight()) {
@@ -80,7 +82,7 @@ public class FaceLabel extends BaseLabel {
 			mStartVo = true;
 		}
 
-		if (mStartVo) {
+		if (mStartVo && this.hasWindowFocus()) {
 			int w = mOsdLayout.getWidth();
 			int h = mOsdLayout.getHeight();
 			if (w > 16 && h > 16) {
@@ -129,8 +131,8 @@ public class FaceLabel extends BaseLabel {
 	}
 
 	public static String mWxUuid = "";
+	private int mWxRid = 0;
 	public void onFaceStart() {
-		this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 		mContext = this;
 		mStartVo = true;
@@ -147,19 +149,31 @@ public class FaceLabel extends BaseLabel {
 		FaceNormal.onStart();
 		FaceCompare.onStart();
 
-		if (sys.lcd() != 0) {
+		if (sys.lcd.orientation() != 0) {
 			dxml p = new dxml();
 			p.load("/dnake/cfg/wx_access.xml");
+			int enable = p.getInt("/sys/enable", 0);
+			String server = p.getText("/sys/server");
+			String uuid = p.getText("/sys/uuid");
+
 			ImageView qr = (ImageView) mOsdLayout.findViewById(R.id.osd_wx_qr2d);
-			if (p.getInt("/sys/enable", 0) != 0 && qr != null) { // 微云门禁二维码
-				String server = p.getText("/sys/server");
-				String uuid = p.getText("/sys/uuid");
-				String s = "http://" + server + "/weixin/api/wx_scan.php?api=wx_unlock.php&data=" + uuid;
+			if (enable != 0 && qr != null) { // 微云门禁二维码
+				mWxRid = (int) (Math.random()*1000000);
+
+				String s = "https://" + server + "/weixin/api/wx_scan.php?api=wx_unlock.php&data=" + uuid + "&data2=" + mWxRid;
 				qr.setImageBitmap(ZXing.QR2D(s, 100));
 				qr.setVisibility(View.VISIBLE);
 				mWxUuid = uuid;
+
+				utils.writeFile(String.valueOf(mWxRid).getBytes(), "/var/etc/rid");
 			}
 		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		this.onFaceStart();
 	}
 
 	@Override
@@ -182,6 +196,11 @@ public class FaceLabel extends BaseLabel {
 		p.setInt("/params/w", 0);
 		p.setInt("/params/h", 0);
 		req.to("/face/osd", p.toString());
+
+		if (mWxRid != 0) {
+			mWxRid = (int) (Math.random()*1000000);
+			utils.writeFile(String.valueOf(mWxRid).getBytes(), "/var/etc/rid");
+		}
 	}
 
 	@Override

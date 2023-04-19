@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -19,7 +20,7 @@ public class utils {
 				NetworkInterface intf = (NetworkInterface) en.nextElement();
 				for(Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress())
+					if ((inetAddress instanceof Inet4Address) && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress())
 						return inetAddress.getHostAddress().toString();
 				}
 			}
@@ -88,7 +89,7 @@ public class utils {
 			return null;
 		try {
 			File file = new File(url);
-			if (!file.exists())
+			if (!file.exists() || file.length() <= 0)
 				return null;
 			FileInputStream fi = new FileInputStream(file);
 			byte[] d = new byte[(int) file.length()];
